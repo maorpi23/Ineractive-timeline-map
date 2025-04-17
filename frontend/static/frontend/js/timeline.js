@@ -7,10 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
   handleMonthChange(monthSelect);
 });
 
+let currentGeoJsonUrl = '/static/frontend/data/countries.geojson'; // ברירת מחדל עברית
+let map; // שיהיה גלובלי ונוכל לגשת אליו מהפונקציה של שינוי שפה
+
+
 function init() {
   console.log("Initializing map...");
 
-  const map = new maplibregl.Map({
+  map = new maplibregl.Map({
     container: 'mapid',
     style: 'https://api.maptiler.com/maps/01961ae0-69ff-7a7f-9600-912e332ef44c/style.json?key=R8uTGCv3RYrhR4yw1YiU',
     center: [14, 48],
@@ -25,57 +29,122 @@ function init() {
   map.on('load', () => {
     console.log("Map fully loaded");
     console.log(map.getStyle().layers);
+    loadCountryLayer();
 
     fetch('/static/frontend/data/countries.geojson')
-      .then(response => response.json())
-      .then(data => {
-        map.addSource('countries', {
-          type: 'geojson',
-          data: data
+  .then(response => response.json())
+  .then(data => {
+    // בדיקה אם הסורס כבר קיים
+    if (!map.getSource('countries')) {
+      map.addSource('countries', {
+        type: 'geojson',
+        data: data
+      });
+    }
+
+    // בדיקה אם הליירים כבר קיימים
+    if (!map.getLayer('countries-fill')) {
+      map.addLayer({
+        id: 'countries-fill',
+        type: 'fill',
+        source: 'countries',
+        paint: {
+          'fill-color': '#888888',
+          'fill-opacity': 0.4
+        }
+      });
+    }
+
+    if (!map.getLayer('countries-outline')) {
+      map.addLayer({
+        id: 'countries-outline',
+        type: 'line',
+        source: 'countries',
+        paint: {
+          'line-color': '#000',
+          'line-width': 1
+        }
+      });
+    }
+
+    // קליק על מדינה
+    map.on('click', 'countries-fill', (e) => {
+      const countryName = e.features[0].properties.name || 'Unknown';
+      const selectedMonth = document.getElementById("month-select").value;
+      const selectedYear = document.querySelector(".timeline-button.active").innerText;
+
+      console.log(`Clicked on ${countryName}, ${selectedMonth}/${selectedYear}`);
+
+      fetch(`/get-battles/?country=${encodeURIComponent(countryName)}&year=${selectedYear}&month=${selectedMonth}`)
+        .then(res => res.json())
+        .then(data => {
+          showBattlesPopup(countryName, selectedYear, selectedMonth, data);
+        })
+        .catch(err => {
+          console.error("Error fetching battle data:", err);
         });
+    });
+  })
+  .catch(error => console.error("Error loading GeoJSON:", error));
 
-        map.addLayer({
-          id: 'countries-fill',
-          type: 'fill',
-          source: 'countries',
-          paint: {
-            'fill-color': '#888888',
-            'fill-opacity': 0.4
-          }
-        });
-
-        map.addLayer({
-          id: 'countries-outline',
-          type: 'line',
-          source: 'countries',
-          paint: {
-            'line-color': '#000',
-            'line-width': 1
-          }
-        });
-
-        // קליק על מדינה
-        map.on('click', 'countries-fill', (e) => {
-          const countryName = e.features[0].properties.name || 'Unknown';
-          const selectedMonth = document.getElementById("month-select").value;
-          const selectedYear = document.querySelector(".timeline-button.active").innerText;
-
-          console.log(`Clicked on ${countryName}, ${selectedMonth}/${selectedYear}`);
-
-          fetch(`/get-battles/?country=${encodeURIComponent(countryName)}&year=${selectedYear}&month=${selectedMonth}`)
-            .then(res => res.json())
-            .then(data => {
-              // הצגת הפופאפ המעוצב עם Bootstrap
-              showBattlesPopup(countryName, selectedYear, selectedMonth, data);
-            })
-            .catch(err => {
-              console.error("Error fetching battle data:", err);
-            });
-        });
-      })
-      .catch(error => console.error("Error loading GeoJSON:", error));
   });
 }
+
+
+function loadCountryLayer() {
+  fetch(currentGeoJsonUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (map.getSource('countries')) {
+        map.getSource('countries').setData(data);
+        return;
+      }
+
+      map.addSource('countries', {
+        type: 'geojson',
+        data: data
+      });
+
+      map.addLayer({
+        id: 'countries-fill',
+        type: 'fill',
+        source: 'countries',
+        paint: {
+          'fill-color': '#888888',
+          'fill-opacity': 0.4
+        }
+      });
+
+      map.addLayer({
+        id: 'countries-outline',
+        type: 'line',
+        source: 'countries',
+        paint: {
+          'line-color': '#000',
+          'line-width': 1
+        }
+      });
+
+      map.on('click', 'countries-fill', (e) => {
+        const countryName = e.features[0].properties.name || 'Unknown';
+        const selectedMonth = document.getElementById("month-select").value;
+        const selectedYear = document.querySelector(".timeline-button.active").innerText;
+
+        console.log(`Clicked on ${countryName}, ${selectedMonth}/${selectedYear}`);
+
+        fetch(`/get-battles/?country=${encodeURIComponent(countryName)}&year=${selectedYear}&month=${selectedMonth}`)
+          .then(res => res.json())
+          .then(data => {
+            showBattlesPopup(countryName, selectedYear, selectedMonth, data);
+          })
+          .catch(err => {
+            console.error("Error fetching battle data:", err);
+          });
+      });
+    })
+    .catch(error => console.error("Error loading GeoJSON:", error));
+}
+
 
 function selectYear(button) {
   document.querySelectorAll('.timeline-button').forEach(btn => btn.classList.remove('active'));
