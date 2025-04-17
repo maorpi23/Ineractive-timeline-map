@@ -31,7 +31,7 @@ function init() {
     console.log(map.getStyle().layers);
     loadCountryLayer();
 
-    fetch('/static/frontend/data/countries.geojson')
+    fetch('/static/frontend/data/countriesHE.geojson')
   .then(response => response.json())
   .then(data => {
     // בדיקה אם הסורס כבר קיים
