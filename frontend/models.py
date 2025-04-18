@@ -17,6 +17,7 @@ class Battle(models.Model):
     month = models.IntegerField(choices=MONTH_CHOICES)
     year = models.IntegerField(choices=YEAR_CHOICES)
     country = models.CharField(max_length=100)
+    hebrew_country = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
