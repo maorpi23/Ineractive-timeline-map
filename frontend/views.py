@@ -20,7 +20,6 @@ def battles_by_date(request, year, month):
     serializer = BattleSerializer(battles, many=True)
     return Response(serializer.data)
 
-
 @require_GET
 def get_battles(request):
     country = request.GET.get('country')
@@ -30,12 +29,13 @@ def get_battles(request):
     if not (country and year and month):
         return JsonResponse([], safe=False)
 
+    # Updated query to use 'year' and 'month' fields directly
     battles = Battle.objects.filter(
         country__iexact=country,
-        date__year=year,
-        date__month=month
+        year=year,
+        month=month
     )
 
-    data = [{"name": b.name} for b in battles]
+    # Use the correct field for the battle name
+    data = [{"name": b.title} for b in battles]
     return JsonResponse(data, safe=False)
-
