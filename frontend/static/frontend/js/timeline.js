@@ -5,6 +5,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const monthSelect = document.getElementById("month-select");
   monthSelect.value = "1";
   handleMonthChange(monthSelect);
+
+  // Glare Effect
+  const glareButtons = document.querySelectorAll('.glare-btn');
+
+  glareButtons.forEach((button) => {
+    const glare = button.querySelector('.glare');
+    if (glare) {
+      // Trigger the glare animation
+      setTimeout(() => {
+        glare.style.right = '-100%';
+        glare.style.transition = 'all 0.6s linear';
+
+        // Reset the glare position after the animation
+        setTimeout(() => {
+          glare.style.right = '120%'; // Reset to the initial position
+          glare.style.transition = 'none'; // Remove transition to avoid flickering
+        }, 600); // Match the duration of the animation (0.6s)
+      }, 3000); // Delay to ensure the user notices the effect
+    }
+  });
 });
 
 // Global variables

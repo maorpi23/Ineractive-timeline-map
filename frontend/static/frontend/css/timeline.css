@@ -176,3 +176,48 @@ button.battle-button:hover {
 #lang-toggle img:hover {
   transform: scale(1.1);
 }
+
+/* Glare Button */
+.glare-btn {
+  font-size: var(--font-size-base); /* Match font size */
+  color: var(--primary-color); /* Match text color */
+  background-color: var(--accent-color); /* Match background color */
+  border: 1px solid var(--accent-color); /* Match border */
+  border-radius: var(--border-radius); /* Match border radius */
+  padding: var(--font-size-small) var(--font-size-base); /* Match padding */
+  font-weight:normal; /* Match font weight */
+  text-transform: uppercase; /* Match text transformation */
+  position: relative;
+  overflow: hidden;
+  display: inline-block; /* Match display */
+  width: auto; /* Remove fixed width */
+  height: auto; /* Remove fixed height */
+  line-height: normal; /* Match line height */
+  transition: background-color 0.3s, transform 0.2s; /* Match transitions */
+}
+
+.glare-btn:hover {
+  cursor: pointer;
+  background-color: var(--text-color); /* Match hover background color */
+  color: var(--primary-color); /* Match hover text color */
+  transform: scale(1.05); /* Match hover scale */
+}
+
+.glare-btn:hover .glare {
+  right: -35%;
+  transition: all 0.6s linear;
+}
+
+.glare:active {
+  opacity: 0.95;
+}
+
+.glare {
+  position: absolute;
+  width: 45px;
+  height: 200%;
+  transform: rotate(25deg);
+  background-color: rgba(255, 255, 255, 0.3);
+  top: -50%;
+  right: 120%;
+}
