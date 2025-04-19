@@ -47,3 +47,5 @@ def get_battles(request):
         data = [{"name": b.title, "description": b.description} for b in battles]
 
     return JsonResponse(data, safe=False)
+
+# comment for fun
