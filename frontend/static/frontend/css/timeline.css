@@ -1,11 +1,11 @@
 /* Global Variables */
 :root {
   /* Colors */
-  --primary-color: #003049; /* Main background or primary color */
-  --secondary-color: #669bbc; /* Secondary background or neutral color */
-  --text-color: #252422; /* Main text color */
-  --accent-color: #c1121f; /* Accent color for buttons or highlights */
-  --muted-color: #fdf0d5; /* Muted or darker text/background color */
+  --primary-color: #e63946; /* Main background or primary color */
+  --secondary-color: #f1faee; /* Secondary background or neutral color */
+  --text-color: #a8dadc; /* Main text color */
+  --accent-color: #457b9d; /* Accent color for buttons or highlights */
+  --muted-color: #1d3557; /* Muted or darker text/background color */
 
   /* Fonts */
   --font-family: 'Arial', sans-serif;
