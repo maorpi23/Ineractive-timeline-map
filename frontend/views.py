@@ -25,7 +25,7 @@ def get_battles(request):
     country = request.GET.get('country')
     year = request.GET.get('year')
     month = request.GET.get('month')
-    lang = request.GET.get('lang', 'he')  # ברירת מחדל לעברית
+    lang = request.GET.get('lang', 'he')  # Default to Hebrew
 
     if not (country and year and month):
         return JsonResponse([], safe=False)
@@ -33,18 +33,18 @@ def get_battles(request):
     # Use the appropriate field for country based on language
     country_filter = {'hebrew_country__iexact': country} if lang == 'he' else {'country__iexact': country}
 
-    # Updated query to use 'year' and 'month' fields directly
+    # Query battles based on year, month, and country
     battles = Battle.objects.filter(
         **country_filter,
         year=year,
         month=month,
     )
 
-    # Select fields based on language
+    # Include the 'id' field in the response
     if lang == 'he':
-        data = [{"name": b.hebrew_title, "description": b.hebrew_description} for b in battles]
+        data = [{"id": b.id, "name": b.hebrew_title, "description": b.hebrew_description} for b in battles]
     else:
-        data = [{"name": b.title, "description": b.description} for b in battles]
+        data = [{"id": b.id, "name": b.title, "description": b.description} for b in battles]
 
     return JsonResponse(data, safe=False)
 

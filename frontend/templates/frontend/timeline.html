@@ -12,7 +12,7 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <!-- MapLibre CSS -->
-<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{% static 'frontend/css/timeline.css' %}">
@@ -80,23 +80,35 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="סגור"></button>
       </div>
       <div class="modal-body">
-        <ul id="battlesList" class="list-group">
-          <!-- הקרבות ייכנסו לכאן -->
-        </ul>
+        <div id="battlesList" class="list-group"></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Battle Details Modal -->
+<div class="modal fade" id="battleDetailsModal" tabindex="-1" aria-labelledby="battleDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="battleDetailsModalLabel">Battle Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="battleDetailsModalBody">
+        <!-- Battle description will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- MapLibre JS -->
-<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-<script src="{% static 'frontend/js/popups.js' %}"></script>
-<script src="{% static 'frontend/js/timeline.js' %}"></script>
-<script src="{% static 'frontend/js/languageSwap.js' %}"></script>
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <script src="{% static 'frontend/js/popups.js' %}"></script>
+  <script src="{% static 'frontend/js/timeline.js' %}"></script>
+  <script src="{% static 'frontend/js/languageSwap.js' %}"></script>
 
 </body>
 </html>
