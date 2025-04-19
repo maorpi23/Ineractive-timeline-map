@@ -103,9 +103,16 @@ body {
 
 /* Modal Header Styling */
 .modal-header {
+  display: flex;
+  justify-content: space-between; /* Push content to opposite sides */
+  align-items: center; /* Vertically align items */
   background-color: var(--accent-color) !important;
   color: var(--primary-color) !important;
   border-radius: 0; /* Remove rounded corners */
+}
+
+.modal-header .btn-close {
+  margin: 0; /* Ensure no extra margin */
 }
 
 .modal-content {
