@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import Battle
 
 class BattleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'country')  # Fields to display in the admin list view
-    search_fields = ('title', 'country','date')  # Fields to search in the admin interface
+     list_display = ('title', 'month', 'year', 'country')  # הצג שדות שקיימים בפועל
+     search_fields = ('title', 'country')
     
 
 # Register your models here.
