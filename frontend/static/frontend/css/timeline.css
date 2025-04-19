@@ -1,11 +1,11 @@
 /* Global Variables */
 :root {
   /* Colors */
-  --primary-color: #e63946; /* Main background or primary color */
-  --secondary-color: #f1faee; /* Secondary background or neutral color */
-  --text-color: #a8dadc; /* Main text color */
-  --accent-color: #457b9d; /* Accent color for buttons or highlights */
-  --muted-color: #1d3557; /* Muted or darker text/background color */
+  --primary-color: #003049; /* Main background or primary color */
+  --secondary-color: #ffb703; /* Secondary background or neutral color */
+  --text-color: #ffffff; /* Main text color */
+  --accent-color: #669bbc; /* Accent color for buttons or highlights */
+  --muted-color: #000814; /* Muted or darker text/background color */
 
   /* Fonts */
   --font-family: 'Arial', sans-serif;
@@ -15,7 +15,7 @@
 
   /* Borders */
   --border-radius: 10px;
-  --border-color: var(--secondary-color);
+  --border-color: var(--muted-color);
 
   /* Shadows */
   --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -30,98 +30,102 @@ body {
 }
 
 #mapid {
-    height: 100vh;
-    width: 100vw;
-    z-index: 0;
-  }
-  
-  .filters-box {
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .timeline-button {
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-    border: 1px solid var(--accent-color);
-    border-radius: var(--border-radius);
-    padding: 10px 15px;
-    font-size: var(--font-size-base);
-    transition: background-color 0.3s, transform 0.2s;
-  }
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+}
 
-  .timeline-button:hover {
-    background-color: var(--text-color);
-    color: var(--primary-color);
-    transform: scale(1.05);
-  }
+.filters-box {
+  padding: var(--font-size-small);
+  background: var(--accent-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--font-size-small);
+  justify-content: center;
+  align-items: center;
+}
 
-  .timeline-button.active {
-    background-color: var(--primary-color) !important;
-    color: var(--accent-color) !important;
-  }
-  
-  .lang-img {
-    width: 60px;
-    height: auto;
-  }
-  
-  .popup-box {
-    font-size: 0.95rem;
-    max-width: 220px;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    direction: rtl;
-  }
-  
-  .popup-list {
-    padding-left: 18px;
-    margin-bottom: 0;
-    list-style: inside;
-  }
-  
-  .loading-popup {
-    font-size: 0.9rem;
-    color: #666;
-  }
+.timeline-button {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border: 1px solid var(--accent-color);
+  border-radius: var(--border-radius);
+  padding: var(--font-size-small) var(--font-size-base);
+  font-size: var(--font-size-base);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.timeline-button:hover {
+  background-color: var(--text-color);
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.timeline-button.active {
+  background-color: var(--primary-color) !important;
+  color: var(--accent-color) !important;
+}
+
+.lang-img {
+  width: var(--font-size-large);
+  height: auto;
+}
+
+.popup-box {
+  font-size: var(--font-size-small);
+  max-width: 220px;
+  background-color: var(--primary-color);
+  padding: var(--font-size-small);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  direction: rtl;
+}
+
+.popup-list {
+  padding-left: var(--font-size-base);
+  margin-bottom: 0;
+  list-style: inside;
+}
+
+.loading-popup {
+  font-size: var(--font-size-small);
+  color: var(--muted-color);
+}
 
 /* Modal Header Styling */
 .modal-header {
   background-color: var(--accent-color) !important;
   color: var(--primary-color) !important;
-  border-bottom: 2px solid var(--border-color);
+  border-radius: 0; /* Remove rounded corners */
+}
+
+.modal-content {
+  border-radius: 0; /* Remove rounded corners */
 }
 
 .modal-body {
   background-color: var(--muted-color);
   color: var(--text-color);
   padding: 20px;
-  border-radius: var(--border-radius);
+  border-radius: 0; /* Remove rounded corners */
 }
 
 /* Battles List Buttons */
 #battlesList .list-group-item {
   font-size: var(--font-size-base);
   font-weight: bold;
-  color: var(--text-color);
-  background-color: #ffffff;
-  border: 1px solid var(--border-color);
+  color: var(--text-color); /* Text color */
+  background-color: var(--accent-color); /* Background color */
+  border: 1px solid var(--border-color); /* Border color */
   border-radius: var(--border-radius);
   transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
 #battlesList .list-group-item:hover {
-  background-color: var(--primary-color);
-  color: #ffffff;
+  background-color: var(--secondary-color); /* Hover background color */
+  color: var(--primary-color); /* Hover text color */
   transform: scale(1.02);
 }
 
