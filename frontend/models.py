@@ -2,7 +2,7 @@ import json
 from django.db import models
 from pathlib import Path
 
-
+# Load country data from countries.geojson
 geojson_path = Path(__file__).resolve().parent / 'static' / 'frontend' / 'data' / 'countries.geojson'
 with open(geojson_path, encoding='utf-8') as f:
     geojson_data = json.load(f)
@@ -63,3 +63,4 @@ class Battle(models.Model):
         print(f"Auto-filled hebrew_country: {self.hebrew_country}")
 
         super().save(*args, **kwargs)
+
