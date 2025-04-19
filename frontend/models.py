@@ -23,14 +23,13 @@ class Battle(models.Model):
         (9, "September"), (10, "October"), (11, "November"), (12, "December")
     ]
     YEAR_CHOICES = [(year, str(year)) for year in range(1939, 1946)]
-
+    country = models.CharField(max_length=100, choices=COUNTRY_CHOICES)  # Dropdown for countries
+    month = models.IntegerField(choices=MONTH_CHOICES)
+    year = models.IntegerField(choices=YEAR_CHOICES)
     hebrew_title = models.CharField(max_length=200)
     hebrew_description = models.TextField()
     title = models.CharField(max_length=200)
     description = models.TextField()
-    month = models.IntegerField(choices=MONTH_CHOICES)
-    year = models.IntegerField(choices=YEAR_CHOICES)
-    country = models.CharField(max_length=100, choices=COUNTRY_CHOICES)  # Dropdown for countries
     hebrew_country = models.CharField(max_length=100, blank=True)  # Auto-filled field
 
     def __str__(self):
