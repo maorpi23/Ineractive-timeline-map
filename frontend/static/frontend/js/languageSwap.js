@@ -53,12 +53,15 @@ function toggleLanguage() {
 function updateMonthSelect(monthSelect) {
   const options = monthSelect.options;
   // First option is "Select a month" text
-  options[0].text = translations[currentLang].selectMonth;
+  //options[0].text = translations[currentLang].selectMonth;
   
   // Update month names (options 1-12)
+  // for (let i = 0; i < 12; i++) {
+  //   if (options[i+1]) {
+  //     options[i+1].text = translations[currentLang].months[i];
+  //   }
+  // }
   for (let i = 0; i < 12; i++) {
-    if (options[i+1]) {
-      options[i+1].text = translations[currentLang].months[i];
-    }
+    options[i].text = translations[currentLang].months[i];
   }
 }
