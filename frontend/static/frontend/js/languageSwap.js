@@ -1,3 +1,4 @@
+
 const translations = {
   he: {
     selectMonth: "בחר חודש",
@@ -18,7 +19,6 @@ const translations = {
     battlesIn: "Battles in"
   }
 };
-
 function toggleLanguage() {
   const html = document.documentElement;
   const langButton = document.getElementById("lang-toggle");
@@ -43,10 +43,15 @@ function toggleLanguage() {
   // Update month names in dropdown
   updateMonthSelect(monthSelect);
   
-  // Update map with new language data
-  if (map && map.isStyleLoaded()) {
-    loadCountryLayer();
-  }
+  // עדכון currentLang גם ב־window
+window.currentLang = currentLang;
+
+// אם קיים map וטעון סטייל, נעדכן את המקור
+if (window.map && window.map.isStyleLoaded()) {
+  window.loadCountryLayer();            // טוען GeoJSON חדש לפי השפה
+  window.updateBattleHighlights();     // מדגיש מיד את המדינות
+}
+
 }
 
 // Helper function to update month dropdown
@@ -54,7 +59,7 @@ function updateMonthSelect(monthSelect) {
   const options = monthSelect.options;
   // First option is "Select a month" text
   //options[0].text = translations[currentLang].selectMonth;
-  
+
   // Update month names (options 1-12)
   // for (let i = 0; i < 12; i++) {
   //   if (options[i+1]) {
@@ -65,3 +70,7 @@ function updateMonthSelect(monthSelect) {
     options[i].text = translations[currentLang].months[i];
   }
 }
+
+
+
+

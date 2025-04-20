@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM fully loaded");
   init();
@@ -29,7 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Global variables
 let map;
-let currentLang = 'he'; // Default language is Hebrew
+window.currentLang = 'he'; // Default language is Hebrew
+let hoveredStateId = null;
 
 // GeoJSON file paths
 const geoJsonPaths = {
@@ -49,12 +51,17 @@ function init() {
     maxZoom: 5,
     attributionControl: true
   });
-
+  window.map = map;
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
 
   map.on('load', () => {
     console.log("Map fully loaded");
     loadCountryLayer();
+    
+    // After initial load, highlight countries with battles
+    map.once('idle', () => {
+      updateBattleHighlights();
+    });
   });
 }
 
@@ -94,12 +101,73 @@ function loadCountryLayer() {
             'line-width': 1
           }
         });
+        
+        // Add hover layer
+        map.addLayer({
+          'id': 'countries-hover',
+          'type': 'fill',
+          'source': 'countries',
+          'paint': {
+            'fill-color': '#FF8888',
+            'fill-opacity': 0
+          },
+          'filter': ['==', 'name', '']
+        });
 
         // Add click handler only once
         setupCountryClickHandler();
+        
+        // Add hover effects
+        setupCountryHoverEffects();
       }
+      
+      // Update battle highlights whenever the map data changes
+      updateBattleHighlights();
     })
     .catch(error => console.error("Error loading GeoJSON:", error));
+}
+function setupCountryHoverEffects() {
+  // Create a variable to store the currently hovered country name
+  let hoveredCountryName = null;
+  
+  // Add a new layer for hover effect
+  if (!map.getLayer('countries-hover')) {
+    map.addLayer({
+      'id': 'countries-hover',
+      'type': 'fill',
+      'source': 'countries',
+      'paint': {
+        'fill-color': '#FF8888',
+        'fill-opacity': 0
+      },
+      'filter': ['==', 'name', '']
+    });
+  }
+
+  // When the mouse moves over a country
+  map.on('mousemove', 'countries-fill', (e) => {
+    map.getCanvas().style.cursor = 'pointer';
+    
+    if (e.features.length > 0) {
+      if (hoveredCountryName) {
+        // Reset previous hover state by setting the filter to exclude it
+        map.setFilter('countries-hover', ['==', 'name', '']);
+      }
+      
+      hoveredCountryName = e.features[0].properties.name;
+      
+      // Highlight the hovered country
+      map.setFilter('countries-hover', ['==', 'name', hoveredCountryName]);
+      map.setPaintProperty('countries-hover', 'fill-opacity', 0.7);
+    }
+  });
+
+  // When the mouse leaves a country
+  map.on('mouseleave', 'countries-fill', () => {
+    map.getCanvas().style.cursor = '';
+    hoveredCountryName = null;
+    map.setFilter('countries-hover', ['==', 'name', '']);
+  });
 }
 
 function setupCountryClickHandler() {
@@ -128,6 +196,9 @@ function setupCountryClickHandler() {
 function selectYear(button) {
   document.querySelectorAll('.timeline-button').forEach(btn => btn.classList.remove('active'));
   button.classList.add('active');
+  
+  // Update highlights when year changes
+  updateBattleHighlights();
 }
 
 function handleMonthChange(selectElement) {
@@ -137,4 +208,31 @@ function handleMonthChange(selectElement) {
     return;
   }
   console.log("Selected month:", selectedMonth);
+  
+  // Update highlights when month changes
+  updateBattleHighlights();
 }
+
+// Function to update battle highlights based on current month and year
+function updateBattleHighlights() {
+  if (!map || !map.isStyleLoaded()) return;
+  
+  const selectedMonth = document.getElementById("month-select").value;
+  const selectedYearButton = document.querySelector(".timeline-button.active");
+  
+  if (!selectedMonth || !selectedYearButton) return;
+  
+  const selectedYear = selectedYearButton.innerText;
+  
+  // Call the highlighting function
+  highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
+}
+
+// expose to global so that languageSwap.js can call them:
+window.map = map;  // map ירגיש כ־global
+window.currentLang = currentLang;
+window.loadCountryLayer = loadCountryLayer;
+window.updateBattleHighlights = updateBattleHighlights;
+window.selectYear = selectYear;
+window.handleMonthChange = handleMonthChange;
+
