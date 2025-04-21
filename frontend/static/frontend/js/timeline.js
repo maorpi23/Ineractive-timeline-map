@@ -117,8 +117,7 @@ function loadCountryLayer() {
         // Add click handler only once
         setupCountryClickHandler();
         
-        // Add hover effects
-        setupCountryHoverEffects();
+      
       }
       
       // Update battle highlights whenever the map data changes
@@ -235,4 +234,3 @@ window.loadCountryLayer = loadCountryLayer;
 window.updateBattleHighlights = updateBattleHighlights;
 window.selectYear = selectYear;
 window.handleMonthChange = handleMonthChange;
-
