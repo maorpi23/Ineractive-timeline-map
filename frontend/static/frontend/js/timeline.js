@@ -72,8 +72,10 @@ function loadCountryLayer() {
   fetch(geoJsonUrl)
     .then(response => response.json())
     .then(data => {
+      const sourceExists = map.getSource('countries');
+
       // If source already exists, update it
-      if (map.getSource('countries')) {
+      if (sourceExists) {
         map.getSource('countries').setData(data);
       } else {
         // Otherwise, create the source and layers
@@ -82,6 +84,7 @@ function loadCountryLayer() {
           data: data
         });
 
+        // Add layers before the first symbol layer found, or add without beforeId if none found
         map.addLayer({
           id: 'countries-fill',
           type: 'fill',
@@ -90,7 +93,7 @@ function loadCountryLayer() {
             'fill-color': '#888888',
             'fill-opacity': 0.4
           }
-        });
+        }); // Add layer without beforeId initially
 
         map.addLayer({
           id: 'countries-outline',
@@ -100,7 +103,7 @@ function loadCountryLayer() {
             'line-color': '#000',
             'line-width': 1
           }
-        });
+        }); // Add layer without beforeId initially
         
         // Add hover layer
         map.addLayer({
@@ -112,19 +115,57 @@ function loadCountryLayer() {
             'fill-opacity': 0
           },
           'filter': ['==', 'name', '']
-        });
+        }); // Add layer without beforeId initially
 
         // Add click handler only once
         setupCountryClickHandler();
-        
-      
+
+        // Move all symbol layers on top of our custom layers
+        const layers = map.getStyle().layers;
+        layers.forEach(layer => {
+          if (layer.type === 'symbol') {
+            console.log(`[Layer Move] Moving symbol layer '${layer.id}' above 'countries-outline'`);
+            map.moveLayer(layer.id); // Move to the top first
+            map.moveLayer(layer.id, 'countries-outline'); // Then move before outline? No, move *after* outline. Let's rethink.
+            // Correction: We want symbols *on top*. Moving layer without beforeId puts it on top.
+            // So, move all symbol layers to be *after* our layers.
+            // Let's move them after 'countries-hover' to be safe.
+            if (map.getLayer(layer.id) && map.getLayer('countries-hover')) { // Check layers exist before moving
+               try {
+                 map.moveLayer(layer.id, undefined); // Move to top
+               } catch (e) {
+                 console.warn(`Could not move layer ${layer.id} initially: ${e.message}`);
+               }
+            }
+          }
+        });
+         // Re-iterate to ensure they are after our layers if needed,
+         // but moving all symbols to the top *after* adding ours might be sufficient.
+         // Let's try just moving them to the top first. If that fails, we adjust.
+         // A simpler approach: Move our layers *down* if needed.
+         // Let's stick to moving symbols up for now.
+         // Final attempt logic: Move all symbol layers to the very top of the stack *after* our layers are added.
+         layers.forEach(layer => {
+           if (layer.type === 'symbol') {
+             if (map.getLayer(layer.id)) { // Check layer exists
+               try {
+                 map.moveLayer(layer.id); // Moves layer to the top of the stack
+                 console.log(`[Layer Move] Moved symbol layer '${layer.id}' to top.`);
+               } catch (e) {
+                 console.warn(`Could not move layer ${layer.id} to top: ${e.message}`);
+               }
+             }
+           }
+         });
+
       }
-      
+
       // Update battle highlights whenever the map data changes
       updateBattleHighlights();
     })
     .catch(error => console.error("Error loading GeoJSON:", error));
 }
+
 function setupCountryHoverEffects() {
   // Create a variable to store the currently hovered country name
   let hoveredCountryName = null;

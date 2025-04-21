@@ -5,6 +5,11 @@
  * and applying MapLibre style expressions based on exact property values.
  */
 
+// Helper function to get CSS variable values
+function getCssVariable(varName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
 function highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth) {
   console.log(`[Highlight] Called with lang=${currentLang}, year=${selectedYear}, month=${selectedMonth}`);
   if (!map.isStyleLoaded()) {
@@ -68,11 +73,17 @@ function processBattleData(map, countryProp, countryList) {
     return;
   }
 
-  // Build match expression
-  const outlineColorExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, '#FF0000']), '#000'];
-  const outlineWidthExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 2]), 1];
-  const fillColorExpr    = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, '#A0A0FF']), '#888888'];
-  const fillOpacityExpr  = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 0.6]), 0.4];
+  // Get colors from CSS variables
+  const highlightedOutlineColor = getCssVariable('--accent-color') || '#669bbc'; // Fallback
+  const defaultOutlineColor = getCssVariable('--muted-color') || '#000814'; // Fallback
+  const highlightedFillColor = getCssVariable('--secondary-color') || '#ffb703'; // Fallback
+  const defaultFillColor = getCssVariable('--primary-color') || '#003049'; // Fallback
+
+  // Build match expression using CSS variable values
+  const outlineColorExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, highlightedOutlineColor]), defaultOutlineColor];
+  const outlineWidthExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 2]), 1]; // Keep width logic
+  const fillColorExpr    = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, highlightedFillColor]), defaultFillColor];
+  const fillOpacityExpr  = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 0.7]), 0.5]; // Adjusted opacity slightly
 
   // Apply styles
   map.setPaintProperty('countries-outline', 'line-color', outlineColorExpr);
@@ -82,11 +93,15 @@ function processBattleData(map, countryProp, countryList) {
 }
 
 function resetCountryStyles(map) {
-  console.log("[Highlight] Resetting country styles to default.");
-  map.setPaintProperty('countries-outline', 'line-color', '#000');
+  console.log("[Highlight] Resetting country styles to default using CSS variables.");
+  // Get default colors from CSS variables
+  const defaultOutlineColor = getCssVariable('--muted-color') || '#000814'; // Fallback
+  const defaultFillColor = getCssVariable('--primary-color') || '#003049'; // Fallback
+
+  map.setPaintProperty('countries-outline', 'line-color', defaultOutlineColor);
   map.setPaintProperty('countries-outline', 'line-width', 1);
-  map.setPaintProperty('countries-fill', 'fill-color', '#888888');
-  map.setPaintProperty('countries-fill', 'fill-opacity', 0.4);
+  map.setPaintProperty('countries-fill', 'fill-color', defaultFillColor);
+  map.setPaintProperty('countries-fill', 'fill-opacity', 0.5); // Match default opacity from processBattleData
 }
 
 // Expose globally
