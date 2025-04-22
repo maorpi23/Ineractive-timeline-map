@@ -26,7 +26,7 @@ function toggleLanguage() {
   // Update the language toggle button image
   const langToggleButton = document.getElementById("lang-toggle");
   const langImage = langToggleButton.querySelector("img");
-  langImage.src = currentLang === 'he' ? langToggleButton.dataset.heImg : langToggleButton.dataset.enImg;
+  langImage.src = currentLang === 'he' ? langToggleButton.dataset.enImg : langToggleButton.dataset.heImg;
 
   // Update the text direction and alignment
   const body = document.body;
@@ -37,6 +37,10 @@ function toggleLanguage() {
     body.setAttribute("dir", "ltr"); // Set direction to left-to-right
     body.style.textAlign = "left"; // Align text to the left
   }
+
+  // Update the month dropdown
+  const monthSelect = document.getElementById("month-select");
+  updateMonthSelect(monthSelect);
 
   // Reload or update content dynamically if needed
   loadCountryLayer();
