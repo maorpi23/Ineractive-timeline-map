@@ -44,7 +44,7 @@ function init() {
 
   map = new maplibregl.Map({
     container: 'mapid',
-    style: 'https://api.maptiler.com/maps/01961ae0-69ff-7a7f-9600-912e332ef44c/style.json?key=R8uTGCv3RYrhR4yw1YiU',
+    style: 'https://api.maptiler.com/maps/01965c4d-c2fb-7c39-a924-7b766071b45b/style.json?key=R8uTGCv3RYrhR4yw1YiU',
     center: [14, 48],
     zoom: 4,
     minZoom: 2.5,
