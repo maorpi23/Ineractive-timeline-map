@@ -26,6 +26,8 @@ class Battle(models.Model):
     country = models.CharField(max_length=100, choices=COUNTRY_CHOICES)  # Dropdown for countries
     month = models.IntegerField(choices=MONTH_CHOICES)
     year = models.IntegerField(choices=YEAR_CHOICES)
+    end_month = models.IntegerField(choices=MONTH_CHOICES, blank=True, null=True)  # Optional end month
+    end_year = models.IntegerField(choices=YEAR_CHOICES, blank=True, null=True)  # Optional end year
     hebrew_title = models.CharField(max_length=200)
     hebrew_description = models.TextField()
     title = models.CharField(max_length=200)
