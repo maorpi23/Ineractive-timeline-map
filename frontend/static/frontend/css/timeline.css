@@ -52,6 +52,19 @@ body {
   gap: var(--font-size-small);
   justify-content: center;
   align-items: center;
+  direction: rtl; /* Force left-to-right alignment for the entire filter box */
+}
+
+/* Ensure consistent alignment for the year buttons */
+.filters-box .d-flex {
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: var(--font-size-small); /* Add spacing between buttons */
+}
+
+/* Ensure consistent alignment for the year buttons */
+.year-buttons {
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: var(--font-size-small); /* Add spacing between buttons */
 }
 
 .timeline-button {
@@ -220,4 +233,11 @@ button.battle-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
   top: -50%;
   right: 120%;
+}
+
+/* Month selector alignment */
+#month-select {
+  text-align: left; /* Align text to the left */
+  direction: ltr; /* Ensure the dropdown options are left-to-right */
+  margin-left: auto; /* Push the month selector to the far right */
 }

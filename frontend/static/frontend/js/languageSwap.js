@@ -1,5 +1,4 @@
 
-
 const translations = {
   he: {
     selectMonth: "בחר חודש",
@@ -21,28 +20,28 @@ const translations = {
   }
 };
 
+
 function toggleLanguage() {
-  const html = document.documentElement;
-  const langButton = document.getElementById("lang-toggle");
-  const monthSelect = document.getElementById("month-select");
+  // Toggle the current language
+  currentLang = currentLang === 'he' ? 'en' : 'he';
 
-  const heImg = langButton.getAttribute("data-he-img");
-  const enImg = langButton.getAttribute("data-en-img");
+  // Update the language toggle button image
+  const langToggleButton = document.getElementById("lang-toggle");
+  const langImage = langToggleButton.querySelector("img");
+  langImage.src = currentLang === 'he' ? langToggleButton.dataset.enImg : langToggleButton.dataset.heImg;
 
-  // Toggle language
+  // Update the text direction and alignment
+  const body = document.body;
   if (currentLang === 'he') {
-    currentLang = 'en';
-    html.setAttribute("lang", "en");
-    html.setAttribute("dir", "ltr");
-    langButton.innerHTML = `<img src="${heImg}" alt="Hebrew" class="img-fluid lang-img">`;
+    body.setAttribute("dir", "rtl"); // Set direction to right-to-left
+    body.style.textAlign = "right"; // Align text to the right
   } else {
-    currentLang = 'he';
-    html.setAttribute("lang", "he");
-    html.setAttribute("dir", "rtl");
-    langButton.innerHTML = `<img src="${enImg}" alt="English" class="img-fluid lang-img">`;
+    body.setAttribute("dir", "ltr"); // Set direction to left-to-right
+    body.style.textAlign = "left"; // Align text to the left
   }
-  
-  // Update month names in dropdown
+
+  // Update the month dropdown
+  const monthSelect = document.getElementById("month-select");
   updateMonthSelect(monthSelect);
   
   // Update currentLang in window
@@ -68,15 +67,6 @@ function toggleLanguage() {
 // Helper function to update month dropdown
 function updateMonthSelect(monthSelect) {
   const options = monthSelect.options;
-  // First option is "Select a month" text
-  //options[0].text = translations[currentLang].selectMonth;
-
-  // Update month names (options 1-12)
-  // for (let i = 0; i < 12; i++) {
-  //   if (options[i+1]) {
-  //     options[i+1].text = translations[currentLang].months[i];
-  //   }
-  // }
   for (let i = 0; i < 12; i++) {
     options[i].text = translations[currentLang].months[i];
   }
