@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM fully loaded");
   init();
@@ -41,6 +40,7 @@ const geoJsonPaths = {
 
 function init() {
   console.log("Initializing map...");
+
 
   map = new maplibregl.Map({
     container: 'mapid',
