@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['10.100.102.13', '127.0.0.1',]#replace this with your server IP address
 #python manage.py runserver 10.100.102.13:8000
+#press ctrl+shift+delete on the keyboard to clear cache
 
 
 # Application definition

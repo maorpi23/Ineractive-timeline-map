@@ -241,3 +241,42 @@ button.battle-button:hover {
   direction: ltr; /* Ensure the dropdown options are left-to-right */
   margin-left: auto; /* Push the month selector to the far right */
 }
+
+/* Accordion Styling */
+.accordion-item {
+  border: 1px solid var(--border-color); /* Use border color variable */
+  border-radius: var(--border-radius); /* Use border radius variable */
+  margin-bottom: var(--spacing-sm); /* Add spacing between accordion items */
+  background-color: var(--muted-color); /* Background color for accordion item */
+}
+
+.accordion-header {
+  font-size: var(--font-size-base); /* Use base font size */
+  font-weight: bold; /* Make header text bold */
+  color: var(--text-color); /* Use text color variable */
+  background-color: var(--accent-color); /* Use accent color for header background */
+  padding: var(--spacing-sm) var(--spacing-md); /* Add padding */
+  border-radius: var(--border-radius) var(--border-radius) 0 0; /* Rounded top corners */
+}
+
+.accordion-button {
+  font-size: var(--font-size-base); /* Use base font size */
+  color: var(--primary-color); /* Use primary color for text */
+  background-color: var(--accent-color); /* Use accent color for button background */
+  border: none; /* Remove border */
+  padding: var(--spacing-sm) var(--spacing-md); /* Add padding */
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--accent-color); /* Use secondary color when expanded */
+  color: var(--text-color); /* Use text color for expanded button */
+}
+
+.accordion-body {
+  font-size: var(--font-size-small); /* Use small font size */
+  color: var(--text-color); /* Use text color variable */
+  background-color: var(--primary-color); /* Use primary color for body background */
+  padding: var(--spacing-md); /* Add padding */
+  border-top: 1px solid var(--border-color); /* Add border between header and body */
+  border-radius: 0 0 var(--border-radius) var(--border-radius); /* Rounded bottom corners */
+}
