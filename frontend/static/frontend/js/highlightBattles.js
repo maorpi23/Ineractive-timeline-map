@@ -11,31 +11,6 @@ function getCssVariable(varName) {
 }
 
 function highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth) {
-  console.log(`[Highlight] Called with lang=${currentLang}, year=${selectedYear}, month=${selectedMonth}`);
-  if (!map.isStyleLoaded()) {
-    console.log("[Highlight] Waiting for style to load...");
-    map.once('styledata', () => ensureLayersExist(map, () => applyHighlighting(map, currentLang, selectedYear, selectedMonth)));
-  } else {
-    ensureLayersExist(map, () => applyHighlighting(map, currentLang, selectedYear, selectedMonth));
-  }
-}
-
-function ensureLayersExist(map, callback) {
-  if (map.getSource('countries') && map.getLayer('countries-outline') && map.getLayer('countries-fill')) {
-    callback();
-  } else {
-    console.log("[Highlight] Waiting for source/layers...");
-    map.once('sourcedata', () => {
-      if (map.getSource('countries') && map.getLayer('countries-outline') && map.getLayer('countries-fill')) {
-        callback();
-      } else {
-        console.error("[Highlight] Missing required source or layers for country highlighting.");
-      }
-    });
-  }
-}
-
-function applyHighlighting(map, currentLang, selectedYear, selectedMonth) {
   console.log(`[Highlight] Fetching summary for ${selectedYear}-${selectedMonth} (${currentLang})`);
   fetch(`/get-battles-summary/?year=${selectedYear}&month=${selectedMonth}&lang=${currentLang}`)
     .then(res => res.json())

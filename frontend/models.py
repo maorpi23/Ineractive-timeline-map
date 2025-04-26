@@ -40,6 +40,12 @@ class Battle(models.Model):
     def save(self, *args, **kwargs):
         print(f"Selected country: {self.country}")
 
+        # Set default end_year and end_month if not provided
+        if not self.end_year:
+            self.end_year = self.year
+        if not self.end_month:
+            self.end_month = self.month
+
         # Find the unique identifiers (ISO3166-1-Alpha-3 and ISO3166-1-Alpha-2) of the selected country in countries.geojson
         selected_country_id_alpha_3 = None
         selected_country_id_alpha_2 = None

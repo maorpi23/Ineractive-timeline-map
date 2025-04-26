@@ -1,31 +1,48 @@
-
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Battle
-from .serializers import BattleSerializer
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from django.db.models import Q, Count
 from .models import Battle
+from .serializers import BattleSerializer
 
 
 def index(request):
     return render(request, 'frontend/timeline.html')
 
+
 @api_view(['GET'])
 def battles_by_date(request, year, month):
+    """
+    Fetch battles for a specific year and month, considering start and end dates.
+    """
     country = request.GET.get('country', None)
-    battles = Battle.objects.filter(date__year=year, date__month=month)
+
+    # Filter battles that overlap with the given year and month
+    battles = Battle.objects.filter(
+        Q(year__lte=year, end_year__gte=year) &
+        Q(
+            Q(month__lte=month, end_month__gte=month) |
+            Q(end_year__gt=year)  # Handle year overlaps
+        )
+    )
+
     if country:
         battles = battles.filter(country__iexact=country)
+
     serializer = BattleSerializer(battles, many=True)
     return Response(serializer.data)
 
+
 @require_GET
 def get_battles(request):
+    """
+    Fetch battles for a specific country, year, and month, considering start and end dates.
+    """
     country = request.GET.get('country')
-    year = request.GET.get('year')
-    month = request.GET.get('month')
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
     lang = request.GET.get('lang', 'he')  # Default to Hebrew
 
     if not (country and year and month):
@@ -34,14 +51,17 @@ def get_battles(request):
     # Use the appropriate field for country based on language
     country_filter = {'hebrew_country__iexact': country} if lang == 'he' else {'country__iexact': country}
 
-    # Query battles based on year, month, and country
+    # Filter battles that overlap with the given year and month
     battles = Battle.objects.filter(
-        **country_filter,
-        year=year,
-        month=month,
+        Q(year__lte=year, end_year__gte=year) &
+        Q(
+            Q(month__lte=month, end_month__gte=month) |
+            Q(end_year__gt=year)  # Handle year overlaps
+        ),
+        **country_filter  # Move this to the end
     )
 
-    # Include the 'id' field in the response
+    # Format the response based on the language
     if lang == 'he':
         data = [{"id": b.id, "name": b.hebrew_title, "description": b.hebrew_description} for b in battles]
     else:
@@ -49,25 +69,28 @@ def get_battles(request):
 
     return JsonResponse(data, safe=False)
 
-from django.http import JsonResponse
-from django.db.models import Count
-from .models import Battle  # Replace with your actual model
 
 def get_battles_summary(request):
     """
-    Return a summary of countries that have battles in the specified year and month.
-    Expected query parameters: year, month, lang
+    Return a summary of countries that have battles in the specified year and month,
+    considering start and end dates.
     """
-    year = request.GET.get('year')
-    month = request.GET.get('month')
+    year = int(request.GET.get('year'))
+    month = int(request.GET.get('month'))
     lang = request.GET.get('lang', 'he')  # Default to Hebrew
 
     if not year or not month:
         return JsonResponse({'error': 'Year and month parameters are required'}, status=400)
 
     try:
-        # Query battles for the specified year and month
-        battles = Battle.objects.filter(year=year, month=month)
+        # Filter battles that overlap with the given year and month
+        battles = Battle.objects.filter(
+            Q(year__lte=year, end_year__gte=year) &
+            Q(
+                Q(month__lte=month, end_month__gte=month) |
+                Q(end_year__gt=year)  # Handle year overlaps
+            )
+        )
 
         # Annotate countries with battle counts
         countries_with_battles = battles.values('country', 'hebrew_country').annotate(
@@ -90,4 +113,4 @@ def get_battles_summary(request):
         })
 
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500) 
+        return JsonResponse({'error': str(e)}, status=500)

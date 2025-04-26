@@ -256,14 +256,14 @@ function handleMonthChange(selectElement) {
 // Function to update battle highlights based on current month and year
 function updateBattleHighlights() {
   if (!map || !map.isStyleLoaded()) return;
-  
+
   const selectedMonth = document.getElementById("month-select").value;
   const selectedYearButton = document.querySelector(".timeline-button.active");
-  
+
   if (!selectedMonth || !selectedYearButton) return;
-  
+
   const selectedYear = selectedYearButton.innerText;
-  
+
   // Call the highlighting function
   highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
 }
