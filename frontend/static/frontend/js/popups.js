@@ -43,10 +43,11 @@ function showBattlesPopup(country, year, month, battles) {
       const accordionBody = `
         <div id="${collapseId}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="${headerId}" data-bs-parent="#battlesAccordion">
           <div class="accordion-body">
-            ${battle.description}
+            ${battle.description.replace(/\n/g, '<br>')}
           </div>
         </div>
       `;
+
 
       // Append header and body to the accordion item
       accordionItem.innerHTML = accordionHeader + accordionBody;
