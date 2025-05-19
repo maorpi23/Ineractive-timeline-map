@@ -29,3 +29,8 @@ import_battles_from_excel('battles_template.xlsx')
 <br>
 
 exit()
+
+<br>
+
+python manage.py runserver 10.100.102.13:8000
+<br>
