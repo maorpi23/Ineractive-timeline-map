@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from .models import Battle, Soldier
 
 class BattleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'hebrew_country', 'year', 'month', 'end_year', 'end_month')  # Add highlight column
+    list_display = ('title', 'country', 'hebrew_country', 'year', 'month', 'end_year', 'end_month')  # Add highlight column
     search_fields = ('title', 'hebrew_country', 'country', 'year', 'month',)
     list_filter = ('year', 'month', 'end_year', 'end_month', 'country')
     exclude = ('hebrew_country',)  # Hide from the admin form
