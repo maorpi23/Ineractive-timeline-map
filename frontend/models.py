@@ -28,6 +28,7 @@ class Battle(models.Model):
     year = models.IntegerField(choices=YEAR_CHOICES)
     end_month = models.IntegerField(choices=MONTH_CHOICES, blank=True, null=True)  # Optional end month
     end_year = models.IntegerField(choices=YEAR_CHOICES, blank=True, null=True)  # Optional end year
+    keywords = models.TextField(blank=True, help_text="הכנס תגיות מופרדות בפסיקים")
     hebrew_title = models.CharField(max_length=200)
     hebrew_description = models.TextField()
     title = models.CharField(max_length=200)
