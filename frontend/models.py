@@ -72,3 +72,15 @@ class Battle(models.Model):
 
         super().save(*args, **kwargs)
 
+class Soldier(models.Model):
+    name_he = models.CharField("שם בעברית", max_length=200)
+    name_en = models.CharField("Name (EN)", max_length=200)
+    country_he = models.CharField("ארץ (עברית)", max_length=200)
+    country_en = models.CharField("Country (EN)", max_length=200)
+    lifeStory_he = models.TextField("קורות חיים (עברית)")
+    lifeStory_en = models.TextField("Life Story (EN)")
+    years        = models.CharField("שנים", max_length=200)
+
+    def __str__(self):
+        # נציג כאן את השם העברי כברירת מחדל
+        return self.name_he
