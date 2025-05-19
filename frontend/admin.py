@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Battle
+from .models import Battle, Soldier
 
 class BattleAdmin(admin.ModelAdmin):
     list_display = ('title', 'hebrew_country', 'year', 'month', 'end_year', 'end_month')  # Add highlight column
@@ -8,6 +8,17 @@ class BattleAdmin(admin.ModelAdmin):
     list_filter = ('year', 'month', 'end_year', 'end_month', 'country')
     exclude = ('hebrew_country',)  # Hide from the admin form
     actions = ['duplicate_battle']
+
+@admin.register(Soldier)
+class SoldierAdmin(admin.ModelAdmin):
+    list_display = (
+        'name_he', 'name_en',
+        'country_he', 'country_en',
+        'years', 'lifeStory_he', 'lifeStory_en'
+    )
+    search_fields = ('name_he', 'name_en', 'country_he', 'country_en')
+    list_filter = ('years', 'country_en')
+
 
     def highlight_battle(self, obj):
         # Highlight if the battle has an end date
