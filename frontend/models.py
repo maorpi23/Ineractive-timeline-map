@@ -79,7 +79,7 @@ class Soldier(models.Model):
     country_en = models.CharField("Country (EN)", max_length=200)
     lifeStory_he = models.TextField("קורות חיים (עברית)")
     lifeStory_en = models.TextField("Life Story (EN)")
-    years = models.IntegerField("שנים")
+    years        = models.CharField("שנים", max_length=200)
 
     def __str__(self):
         # נציג כאן את השם העברי כברירת מחדל
