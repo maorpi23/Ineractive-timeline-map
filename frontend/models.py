@@ -87,6 +87,8 @@ class Soldier(models.Model):
     lifeStory_he = models.TextField("קורות חיים (עברית)")
     lifeStory_en = models.TextField("Life Story (EN)")
     years = models.CharField("שנים", max_length=200)
+    image_url = models.URLField("קישור לתמונה", max_length=500, blank=True)
+
 
     def __str__(self):
         return self.name_he

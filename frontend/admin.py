@@ -14,11 +14,17 @@ class SoldierAdmin(admin.ModelAdmin):
     list_display = (
         'name_he', 'name_en',
         'country_he', 'country_en',
-        'years', 'lifeStory_he', 'lifeStory_en'
+        'years'
     )
     search_fields = ('name_he', 'name_en', 'country_he', 'country_en')
     list_filter = ('years', 'country_en')
+    readonly_fields = ('image_preview',)
 
+    def image_preview(self, obj):
+        if obj.image_url:
+            return format_html('<img src="{}" style="max-height: 100px;"/>', obj.image_url)
+        return "-"
+    image_preview.short_description = 'תצוגת תמונה'
 
     def highlight_battle(self, obj):
         # Highlight if the battle has an end date

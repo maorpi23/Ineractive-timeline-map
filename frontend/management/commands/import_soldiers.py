@@ -22,7 +22,8 @@ class Command(BaseCommand):
                     name_he=row.get('שם', '').strip(),
                     country_he=row.get('מדינה', '').strip(),
                     lifeStory_he=row.get('קורות חיים', '').strip(),
-                    years=row.get('שנות פעילות', 0),
+                    years=row.get('שנות פעילות', '').strip(),
+                    image_url=row.get('קישור לתמונה', '').strip(),
                 )
                 total += 1
 
