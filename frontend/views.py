@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from django.db.models import Q, Count
 from .models import Battle
 from .serializers import BattleSerializer
 
@@ -12,26 +11,41 @@ def index(request):
     return render(request, 'frontend/timeline.html')
 
 
+def _filter_active_battles(queryset, target_year, target_month):
+    """
+    Helper to filter battles active during the target year and month.
+    """
+    target = target_year * 100 + target_month
+    active = []
+    for battle in queryset:
+        # Determine start and end in YYYYMM format
+        start = battle.year * 100 + battle.month
+        end_year = battle.end_year if battle.end_year else battle.year
+        end_month = battle.end_month if battle.end_month else battle.month
+        end = end_year * 100 + end_month
+        if start <= target <= end:
+            active.append(battle)
+    return active
+
+
 @api_view(['GET'])
 def battles_by_date(request, year, month):
     """
     Fetch battles for a specific year and month, considering start and end dates.
     """
-    country = request.GET.get('country', None)
+    country = request.GET.get('country')
+    try:
+        year = int(year)
+        month = int(month)
+    except (TypeError, ValueError):
+        return Response({'error': 'Invalid year or month'}, status=400)
 
-    # Filter battles that overlap with the given year and month
-    battles = Battle.objects.filter(
-        Q(year__lte=year, end_year__gte=year) &
-        Q(
-            Q(month__lte=month, end_month__gte=month) |
-            Q(end_year__gt=year)  # Handle year overlaps
-        )
-    )
-
+    queryset = Battle.objects.all()
     if country:
-        battles = battles.filter(country__iexact=country)
+        queryset = queryset.filter(country__iexact=country)
 
-    serializer = BattleSerializer(battles, many=True)
+    active = _filter_active_battles(queryset, year, month)
+    serializer = BattleSerializer(active, many=True)
     return Response(serializer.data)
 
 
@@ -41,76 +55,67 @@ def get_battles(request):
     Fetch battles for a specific country, year, and month, considering start and end dates.
     """
     country = request.GET.get('country')
-    year = int(request.GET.get('year'))
-    month = int(request.GET.get('month'))
+    try:
+        year = int(request.GET.get('year'))
+        month = int(request.GET.get('month'))
+    except (TypeError, ValueError):
+        return JsonResponse([], safe=False)
     lang = request.GET.get('lang', 'he')  # Default to Hebrew
 
-    if not (country and year and month):
-        return JsonResponse([], safe=False)
-
-    # Use the appropriate field for country based on language
-    country_filter = {'hebrew_country__iexact': country} if lang == 'he' else {'country__iexact': country}
-
-    # Filter battles that overlap with the given year and month
-    battles = Battle.objects.filter(
-        Q(year__lte=year, end_year__gte=year) &
-        Q(
-            Q(month__lte=month, end_month__gte=month) |
-            Q(end_year__gt=year)  # Handle year overlaps
-        ),
-        **country_filter  # Move this to the end
-    )
-
-    # Format the response based on the language
+    # Select appropriate filter field
     if lang == 'he':
-        data = [{"id": b.id, "name": b.hebrew_title, "description": b.hebrew_description} for b in battles]
+        queryset = Battle.objects.filter(hebrew_country__iexact=country)
     else:
-        data = [{"id": b.id, "name": b.title, "description": b.description} for b in battles]
+        queryset = Battle.objects.filter(country__iexact=country)
+
+    active = _filter_active_battles(queryset, year, month)
+
+    # Prepare response data
+    if lang == 'he':
+        data = [
+            {"id": b.id, "name": b.hebrew_title, "description": b.hebrew_description}
+            for b in active
+        ]
+    else:
+        data = [
+            {"id": b.id, "name": b.title, "description": b.description}
+            for b in active
+        ]
 
     return JsonResponse(data, safe=False)
 
 
 def get_battles_summary(request):
     """
-    Return a summary of countries that have battles in the specified year and month,
-    considering start and end dates.
+    Return a summary of countries that have battles in the specified year and month.
     """
-    year = int(request.GET.get('year'))
-    month = int(request.GET.get('month'))
-    lang = request.GET.get('lang', 'he')  # Default to Hebrew
-
-    if not year or not month:
-        return JsonResponse({'error': 'Year and month parameters are required'}, status=400)
-
     try:
-        # Filter battles that overlap with the given year and month
-        battles = Battle.objects.filter(
-            Q(year__lte=year, end_year__gte=year) &
-            Q(
-                Q(month__lte=month, end_month__gte=month) |
-                Q(end_year__gt=year)  # Handle year overlaps
-            )
-        )
+        year = int(request.GET.get('year'))
+        month = int(request.GET.get('month'))
+    except (TypeError, ValueError):
+        return JsonResponse({'error': 'Valid year and month parameters are required'}, status=400)
+    lang = request.GET.get('lang', 'he')
 
-        # Annotate countries with battle counts
-        countries_with_battles = battles.values('country', 'hebrew_country').annotate(
-            battle_count=Count('id')
-        ).order_by('country')
+    # Aggregate by country
+    if lang == 'he':
+        field_name, display_field = 'hebrew_country', 'hebrew_country'
+    else:
+        field_name, display_field = 'country', 'country'
 
-        # Format the response based on the language
-        country_list = [
-            {
-                'name': item['hebrew_country'] if lang == 'he' else item['country'],
-                'count': item['battle_count']
-            }
-            for item in countries_with_battles
-        ]
+    summary = []
+    # Unique countries that have any battles
+    countries = Battle.objects.values_list(field_name, flat=True).distinct()
+    for country_val in countries:
+        queryset = Battle.objects.filter(**{f"{field_name}__iexact": country_val})
+        active = _filter_active_battles(queryset, year, month)
+        if active:
+            summary.append({
+                'name': country_val,
+                'count': len(active)
+            })
 
-        return JsonResponse({
-            'year': year,
-            'month': month,
-            'countries': country_list
-        })
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({
+        'year': year,
+        'month': month,
+        'countries': summary
+    })
