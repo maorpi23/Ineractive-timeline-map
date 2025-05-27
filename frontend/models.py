@@ -80,6 +80,7 @@ class Battle(models.Model):
         super().save(*args, **kwargs)
 
 class Soldier(models.Model):
+    id = models.AutoField(primary_key=True)
     hebrew_name = models.CharField("שם בעברית", max_length=200)
     hebrew_personal_details = models.TextField("פרטים אישיים")
     hebrew_biography = models.TextField("קורות חיים")
