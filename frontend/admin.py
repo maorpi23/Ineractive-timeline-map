@@ -8,17 +8,19 @@ class BattleAdmin(admin.ModelAdmin):
     list_filter = ('year', 'month', 'end_year', 'end_month', 'country')
     exclude = ('hebrew_country',)  # Hide from the admin form
     actions = ['duplicate_battle']
-
+#id,hebrew_name,קישור לתמונה,פרטים אישיים,קורות חיים,english_name,personal details,Biography
 @admin.register(Soldier)
 class SoldierAdmin(admin.ModelAdmin):
     list_display = (
-        'name_he', 'name_en',
-        'country_he', 'country_en',
-        'years'
+        'id',
+        'hebrew_name','hebrew_personal_details', 'hebrew_biography'
+        ,'image_link'
+        ,'english_name','personal_details','Biography'
     )
-    search_fields = ('name_he', 'name_en', 'country_he', 'country_en')
-    list_filter = ('years', 'country_en')
-    readonly_fields = ('image_preview',)
+    search_fields = ('id','hebrew_name' ,'english_name')
+    list_filter = ('hebrew_name','english_name')
+    readonly_fields = ('image_link',)
+
 
     def image_preview(self, obj):
         if obj.image_url:

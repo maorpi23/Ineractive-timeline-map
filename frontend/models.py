@@ -80,15 +80,16 @@ class Battle(models.Model):
         super().save(*args, **kwargs)
 
 class Soldier(models.Model):
-    name_he = models.CharField("שם בעברית", max_length=200)
-    name_en = models.CharField("Name (EN)", max_length=200)
-    country_he = models.CharField("ארץ (עברית)", max_length=200)
-    country_en = models.CharField("Country (EN)", max_length=200)
-    lifeStory_he = models.TextField("קורות חיים (עברית)")
-    lifeStory_en = models.TextField("Life Story (EN)")
-    years = models.CharField("שנים", max_length=200)
-    image_url = models.URLField("קישור לתמונה", max_length=500, blank=True)
+    hebrew_name = models.CharField("שם בעברית", max_length=200)
+    hebrew_personal_details = models.TextField("פרטים אישיים")
+    hebrew_biography = models.TextField("קורות חיים")
+    image_link = models.URLField("קישור לתמונה", max_length=500, blank=True)
+    english_name = models.CharField("Name (EN)", max_length=200)
+    personal_details = models.TextField("Personal Details")
+    Biography = models.TextField("Biography")
+
+    
 
 
     def __str__(self):
-        return self.name_he
+        return self.hebrew_name
