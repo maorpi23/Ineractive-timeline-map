@@ -280,3 +280,73 @@ button.battle-button:hover {
   border-top: 1px solid var(--border-color); /* Add border between header and body */
   border-radius: 0 0 var(--border-radius) var(--border-radius); /* Rounded bottom corners */
 }
+
+/* container גמיש שמציג כרטיסים זה לצד זה */
+.soldiers-section {
+  display: flex;            /* flex במקום block */
+  flex-wrap: wrap;          /* יגלגל לשורה חדשה רק כשאין מקום */
+  gap: 0.5rem;
+}
+
+/* הכרטיסים עצמם – יציגו בתור flex-item ולא יכבידו על שורה */
+.soldier-card {
+  display: flex;            
+  flex-direction: column;   /* תמונה מעל, שם מתחת */
+  align-items: center;
+  flex: 0 0 auto;           /* לא יתכווץ ולא יתמתח מעבר ל־width/height */
+  width: 80px;
+}
+
+/* כפתור פנימי – תופס רק את המרחב של הכרטיס */
+.soldier-card button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* מכולת התמונה וה־img – כפי שהיה, מוודא 80×80px */
+.soldier-card .image-container {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 6px;
+  position: relative;
+}
+.soldier-card .image-container img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* שם הלוחם */
+.soldier-card .soldier-name {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  
+  text-overflow: ellipsis;
+}
+.soldier-card button:hover .soldier-name {
+  color: #007bff;
+}
+
+/* כפתור פשוט ללוחמים ללא תמונה */
+.soldier-noimg {
+  display: inline-block;
+  vertical-align: top;
+  width: auto;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}

@@ -112,33 +112,56 @@ async function getCachedSoldiersData() {
  * @param {string} lang - Current language
  * @returns {string} - HTML string for soldier list
  */
+// soldierLogic.js
+
+// soldierLogic.js
+
 function createSoldierListHTML(soldiers, lang) {
-    if (!soldiers || soldiers.length === 0) {
-        return ''; // אין לוחמים — מחזיר סטרינג ריק
+    if (soldiers.length === 0) {
+        const noSoldiersText = lang === 'he'
+            ? 'לא נמצאו לוחמים עבור קרב זה'
+            : 'No soldiers found for this battle';
+        return `<p class="text-muted">${noSoldiersText}</p>`;
     }
 
-    const titleText = lang === 'he' 
-        ? 'לוחמים יהודים שהשתתפו בקרב:' 
-        : 'Jewish soldiers who participated in the battle:';
+    // פיצול למי שיש לו תמונה ומי שאין
+    const withImg = soldiers.filter(s => s.imageLink);
+    const withoutImg = soldiers.filter(s => !s.imageLink);
 
-    let html = `<div class="mt-3 soldiers-section">
-        <h6 class="fw-bold">${titleText}</h6>
-        <div class="soldiers-list">`;
+    let html = `<div class="mt-3 soldiers-section">`;
 
-    soldiers.forEach(soldier => {
+    // קודם לוחמים עם תמונה – ככרטיסונים קטנים
+    withImg.forEach(soldier => {
+        const name = soldier.name;
+        const imgSrc = soldier.imageLink;
         html += `
-            <button class="btn btn-outline-primary btn-sm me-2 mb-2 soldier-btn" 
-                    data-soldier-id="${soldier.id}" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#soldierDetailsModal"
-                    onclick="showSoldierDetails(${soldier.id}, '${lang}')">
-                ${soldier.name}
-            </button>`;
+        <div class="soldier-card">
+          <button class="soldier-btn"
+                  data-soldier-id="${soldier.id}"
+                  data-lang="${lang}">
+            <div class="image-container">
+              <img src="${imgSrc}" alt="${name}" />
+            </div>
+            <div class="soldier-name">${name}</div>
+          </button>
+        </div>`;
     });
 
-    html += '</div></div>';
+    // אחר כך לוחמים בלי תמונה – ככפתור Bootstrap פשוט
+    withoutImg.forEach(soldier => {
+        const name = soldier.name;
+        html += `
+        <button class="btn btn-outline-secondary btn-sm me-2 mb-2 soldier-noimg soldier-btn"
+                data-soldier-id="${soldier.id}"
+                data-lang="${lang}">
+          ${name}
+        </button>`;
+    });
+
+    html += '</div>';
     return html;
 }
+
 
 
 /**

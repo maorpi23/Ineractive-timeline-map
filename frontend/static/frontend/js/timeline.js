@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   init();
 
   const monthSelect = document.getElementById("month-select");
-  monthSelect.value = "1";
+  monthSelect.value = "9";
   handleMonthChange(monthSelect);
 
   // Glare Effect
