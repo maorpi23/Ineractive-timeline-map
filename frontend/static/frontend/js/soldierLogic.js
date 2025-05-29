@@ -113,8 +113,14 @@ async function getCachedSoldiersData() {
  * @returns {string} - HTML string for soldier list
  */
 function createSoldierListHTML(soldiers, lang) {
-    const titleText = lang === 'he' ? 'לוחמים יהודים שהשתתפו בקרב:' : 'Jewish soldiers who participated in the battle:';
-    
+    if (!soldiers || soldiers.length === 0) {
+        return ''; // אין לוחמים — מחזיר סטרינג ריק
+    }
+
+    const titleText = lang === 'he' 
+        ? 'לוחמים יהודים שהשתתפו בקרב:' 
+        : 'Jewish soldiers who participated in the battle:';
+
     let html = `<div class="mt-3 soldiers-section">
         <h6 class="fw-bold">${titleText}</h6>
         <div class="soldiers-list">`;
@@ -133,6 +139,7 @@ function createSoldierListHTML(soldiers, lang) {
     html += '</div></div>';
     return html;
 }
+
 
 /**
  * Show soldier details in modal
