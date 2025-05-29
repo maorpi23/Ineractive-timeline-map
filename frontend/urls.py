@@ -8,4 +8,6 @@ urlpatterns = [
     path('api/battles/<int:year>/<int:month>/', battles_by_date, name='battles_by_date'),
     path('get-battles/', views.get_battles, name='get_battles'),
     path('get-battles-summary/', views.get_battles_summary, name='get_battles_summary'),
+    path('api/soldiers/', views.get_soldiers, name='get_soldiers'),
+      path('api/battles/<int:battle_id>/keywords/', views.get_battle_keywords, name='get_battle_keywords'),
 ]

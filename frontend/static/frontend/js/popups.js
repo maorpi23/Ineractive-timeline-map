@@ -31,7 +31,7 @@ function showAutoClosePopup(message) {
 }
 
 // Show battles in modal or auto-close popup if none
-function showBattlesPopup(country, year, month, battles) {
+async function showBattlesPopup(country, year, month, battles) {
   const monthNames = translations[currentLang].months;
   const modalTitle = document.getElementById("battlesModalLabel");
 
@@ -52,12 +52,32 @@ function showBattlesPopup(country, year, month, battles) {
     return;
   }
 
+  const battlesWithKeywords = await Promise.all(
+    battles.map(async battle => {
+      const res = await fetch(`/api/battles/${battle.id}/keywords/`);
+      const json = await res.json();
+      return {
+        ...battle,
+        keywords: json.keywords || ''
+      };
+    })
+  );
+
+
+  // Get soldiers data for soldier matching
+  const soldiersData = await getCachedSoldiersData();
+
   // Create the accordion container
   const accordion = document.createElement("div");
   accordion.className = "accordion";
   accordion.id = "battlesAccordion";
 
-  battles.forEach((battle, index) => {
+  
+  battlesWithKeywords.forEach((battle, index) => {
+    // סינון הלוחמים לפי keywords מהקריאה החדשה
+    const battleSoldiers = getSoldiersForBattle(battle, soldiersData, currentLang);
+    const formattedSoldiers = battleSoldiers.map(s => formatSoldierForDisplay(s, currentLang));
+
     // Create the accordion item
     const accordionItem = document.createElement("div");
     accordionItem.className = "accordion-item";
@@ -73,12 +93,15 @@ function showBattlesPopup(country, year, month, battles) {
       </h2>
     `;
 
-    // Format description with line breaks
+    // Format description with line breaks and add soldiers list
     const formattedDesc = battle.description.replace(/\n/g, '<br>');
+    const soldiersHTML = createSoldierListHTML(formattedSoldiers, currentLang);
+    
     const accordionBody = `
       <div id="${collapseId}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="${headerId}" data-bs-parent="#battlesAccordion">
         <div class="accordion-body">
           ${formattedDesc}
+          ${soldiersHTML}
         </div>
       </div>
     `;

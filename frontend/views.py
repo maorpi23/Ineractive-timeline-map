@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from .models import Battle
+from .models import Battle, Soldier
 from .serializers import BattleSerializer
+from django.http import Http404
 
 
 def index(request):
@@ -26,6 +27,18 @@ def _filter_active_battles(queryset, target_year, target_month):
         if start <= target <= end:
             active.append(battle)
     return active
+
+
+@api_view(['GET'])
+def get_battle_keywords(request, battle_id):
+    """
+    מחזיר רק את מחרוזת ה-keywords עבור קרב לפי ה-ID שלו
+    """
+    try:
+        battle = Battle.objects.get(pk=battle_id)
+    except Battle.DoesNotExist:
+        raise Http404("Battle not found")
+    return Response({'keywords': battle.keywords})
 
 
 @api_view(['GET'])
@@ -119,3 +132,26 @@ def get_battles_summary(request):
         'month': month,
         'countries': summary
     })
+
+
+@api_view(['GET'])
+def get_soldiers(request):
+    """
+    API endpoint to get all soldiers data for client-side processing.
+    """
+    soldiers = Soldier.objects.all()
+    
+    data = []
+    for soldier in soldiers:
+        data.append({
+            'id': soldier.id,
+            'hebrew_name': soldier.hebrew_name,
+            'hebrew_personal_details': soldier.hebrew_personal_details,
+            'hebrew_biography': soldier.hebrew_biography,
+            'image_link': soldier.image_link,
+            'english_name': soldier.english_name,
+            'personal_details': soldier.personal_details,
+            'Biography': soldier.Biography
+        })
+    
+    return Response(data)
