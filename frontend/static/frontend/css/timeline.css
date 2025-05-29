@@ -350,3 +350,17 @@ button.battle-button:hover {
   font-size: 0.75rem;
   white-space: nowrap;
 }
+
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 10px solid #eee;
+  border-top: 10px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
