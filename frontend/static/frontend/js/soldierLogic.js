@@ -112,12 +112,7 @@ async function getCachedSoldiersData() {
  * @returns {string} - HTML string for soldier list
  */
 function createSoldierListHTML(soldiers, lang) {
-    if (soldiers.length === 0) {
-        const noSoldiersText = lang === 'he' ? 'לא נמצאו לוחמים עבור קרב זה' : 'No soldiers found for this battle';
-        return `<p class="text-muted">${noSoldiersText}</p>`;
-    }
-
-    const titleText = lang === 'he' ? 'לוחמים שהשתתפו בקרב:' : 'Soldiers who participated in the battle:';
+    const titleText = lang === 'he' ? 'לוחמים יהודים שהשתתפו בקרב:' : 'Jewish soldiers who participated in the battle:';
     
     let html = `<div class="mt-3 soldiers-section">
         <h6 class="fw-bold">${titleText}</h6>
