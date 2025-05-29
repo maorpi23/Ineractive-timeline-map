@@ -7,7 +7,7 @@
  * @param {string} lang - Current language ('he' or 'en')
  * @returns {boolean} - True if soldier participated in the battle
  */
-function didSoldierParticipateInBattle(battle, soldier, lang) {
+function didSoldierParticipateInBattle(battle, soldier) {
     if (!battle.keywords || !soldier) {
         return false;
     }
@@ -22,8 +22,9 @@ function didSoldierParticipateInBattle(battle, soldier, lang) {
         return false;
     }
 
-    // Get the appropriate biography field based on language
-    const biography = lang === 'he' ? soldier.hebrew_biography : soldier.Biography;
+    // תמיד משווים מילות מפתח מול קורות החיים בעברית
+   const biography = soldier.hebrew_biography;
+
     
     if (!biography) {
         return false;
@@ -42,9 +43,9 @@ function didSoldierParticipateInBattle(battle, soldier, lang) {
  * @param {string} lang - Current language
  * @returns {Array} - Array of participating soldiers
  */
-function getSoldiersForBattle(battle, allSoldiers, lang) {
+function getSoldiersForBattle(battle, allSoldiers) {
     return allSoldiers.filter(soldier => 
-        didSoldierParticipateInBattle(battle, soldier, lang)
+        didSoldierParticipateInBattle(battle, soldier)
     );
 }
 

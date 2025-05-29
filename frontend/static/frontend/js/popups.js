@@ -75,7 +75,7 @@ async function showBattlesPopup(country, year, month, battles) {
   
   battlesWithKeywords.forEach((battle, index) => {
     // סינון הלוחמים לפי keywords מהקריאה החדשה
-    const battleSoldiers = getSoldiersForBattle(battle, soldiersData, currentLang);
+    const battleSoldiers = getSoldiersForBattle(battle, soldiersData);
     const formattedSoldiers = battleSoldiers.map(s => formatSoldierForDisplay(s, currentLang));
 
     // Create the accordion item
