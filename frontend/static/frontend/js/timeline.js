@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   init();
 
   const monthSelect = document.getElementById("month-select");
-  monthSelect.value = "1";
+  monthSelect.value = "9";
   handleMonthChange(monthSelect);
 
   // Glare Effect
@@ -257,16 +257,28 @@ function handleMonthChange(selectElement) {
 function updateBattleHighlights() {
   if (!map || !map.isStyleLoaded()) return;
 
+  const splash = document.getElementById("splash-screen");
+  splash.style.display = "flex"; // SHOW splash
+
   const selectedMonth = document.getElementById("month-select").value;
   const selectedYearButton = document.querySelector(".timeline-button.active");
 
-  if (!selectedMonth || !selectedYearButton) return;
+  if (!selectedMonth || !selectedYearButton) {
+    splash.style.display = "none"; // hide if missing info
+    return;
+  }
 
   const selectedYear = selectedYearButton.innerText;
 
-  // Call the highlighting function
-  highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
+  // קריאה לפונקציה שאחראית על ההדגשות
+  Promise.resolve(
+    highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth)
+  ).finally(() => {
+    splash.style.display = "none"; // HIDE splash when done
+  });
 }
+
+
 
 // expose to global so that languageSwap.js can call them:
 window.map = map;  // map ירגיש כ־global
