@@ -13,7 +13,7 @@ function getCssVariable(varName) {
 function highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth) {
   console.log(`[Highlight] Fetching summary for ${selectedYear}-${selectedMonth} (${currentLang})`);
 
-  return fetch(`/get-battles-summary/?year=${selectedYear}&month=${selectedMonth}&lang=${currentLang}`)
+  fetch(`/get-battles-summary/?year=${selectedYear}&month=${selectedMonth}&lang=${currentLang}`)
     .then(res => res.json())
     .then(data => {
       console.log("[Highlight] Received summary data:", data);

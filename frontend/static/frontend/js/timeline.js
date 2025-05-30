@@ -256,26 +256,16 @@ function handleMonthChange(selectElement) {
 // Function to update battle highlights based on current month and year
 function updateBattleHighlights() {
   if (!map || !map.isStyleLoaded()) return;
-
-  const splash = document.getElementById("splash-screen");
-  splash.style.display = "flex"; // SHOW splash
-
   const selectedMonth = document.getElementById("month-select").value;
   const selectedYearButton = document.querySelector(".timeline-button.active");
 
-  if (!selectedMonth || !selectedYearButton) {
-    splash.style.display = "none"; // hide if missing info
-    return;
-  }
+  if (!selectedMonth || !selectedYearButton) return;
 
   const selectedYear = selectedYearButton.innerText;
 
-  // קריאה לפונקציה שאחראית על ההדגשות
-  Promise.resolve(
-    highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth)
-  ).finally(() => {
-    splash.style.display = "none"; // HIDE splash when done
-  });
+  highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
+
+
 }
 
 
