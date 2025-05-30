@@ -30,14 +30,19 @@ function highlightCountriesWithBattles(map, currentLang, selectedYear, selectedM
 
 function detectNameProperty(map) {
   const src = map.getSource('countries');
+  if (!src) {
+    console.warn("[Highlight] Could not get 'countries' source from map");
+    return 'name';
+  }
   const geojson = src._data || (src._options && src._options.data);
-  if (!geojson || !geojson.features.length) return 'name';
+  if (!geojson || !geojson.features || !geojson.features.length) return 'name';
   const props = geojson.features[0].properties;
   if ('name' in props) return 'name';
   const key = Object.keys(props).find(k => /en|english/i.test(k));
   console.log(`[Highlight] Detected property for country name: ${key || 'name'}`);
   return key || 'name';
 }
+
 
 function processBattleData(map, countryProp, countryList) {
   console.log(`[Highlight] Processing with property: ${countryProp}`);
