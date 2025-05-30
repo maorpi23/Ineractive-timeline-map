@@ -263,7 +263,10 @@ function updateBattleHighlights() {
 
   const selectedYear = selectedYearButton.innerText;
 
+  waitForSource(map, 'countries', () => {
   highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
+});
+
 
 
 }

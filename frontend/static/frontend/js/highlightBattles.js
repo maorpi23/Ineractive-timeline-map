@@ -10,6 +10,21 @@ function getCssVariable(varName) {
   return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 }
 
+function waitForSource(map, sourceName, callback) {
+  if (map.getSource(sourceName)) {
+    callback();
+    return;
+  }
+  function onSourceData() {
+    if (map.getSource(sourceName)) {
+      map.off('sourcedata', onSourceData);
+      callback();
+    }
+  }
+  map.on('sourcedata', onSourceData);
+}
+
+
 function highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth) {
   console.log(`[Highlight] Fetching summary for ${selectedYear}-${selectedMonth} (${currentLang})`);
 
