@@ -43,7 +43,6 @@ function detectNameProperty(map) {
   return key || 'name';
 }
 
-
 function processBattleData(map, countryProp, countryList) {
   console.log(`[Highlight] Processing with property: ${countryProp}`);
   const countryNames = countryList.map(c => c.name && c.name.trim()).filter(n => !!n);
@@ -63,16 +62,36 @@ function processBattleData(map, countryProp, countryList) {
 
   // Build match expression using CSS variable values
   const outlineColorExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, highlightedOutlineColor]), defaultOutlineColor];
-  const outlineWidthExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 2]), 1]; // Keep width logic
+  const outlineWidthExpr = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 2]), 1];
   const fillColorExpr    = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, highlightedFillColor]), defaultFillColor];
-  const fillOpacityExpr  = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 0.7]), 0.5]; // Adjusted opacity slightly
+  const fillOpacityExpr  = ['match', ['get', countryProp], ...countryNames.flatMap(name => [name, 0.7]), 0.5];
 
-  // Apply styles
-  map.setPaintProperty('countries-outline', 'line-color', outlineColorExpr);
-  map.setPaintProperty('countries-outline', 'line-width', outlineWidthExpr);
-  map.setPaintProperty('countries-fill', 'fill-color', fillColorExpr);
-  map.setPaintProperty('countries-fill', 'fill-opacity', fillOpacityExpr);
+  // Apply styles only if the layer exists
+  if (map.getLayer('countries-outline')) {
+    map.setPaintProperty('countries-outline', 'line-color', outlineColorExpr);
+    map.setPaintProperty('countries-outline', 'line-width', outlineWidthExpr);
+  }
+  if (map.getLayer('countries-fill')) {
+    map.setPaintProperty('countries-fill', 'fill-color', fillColorExpr);
+    map.setPaintProperty('countries-fill', 'fill-opacity', fillOpacityExpr);
+  }
 }
+
+function resetCountryStyles(map) {
+  console.log("[Highlight] Resetting country styles to default using CSS variables.");
+  const defaultOutlineColor = getCssVariable('--muted-color') || '#000814';
+  const defaultFillColor = getCssVariable('--primary-color') || '#003049';
+
+  if (map.getLayer('countries-outline')) {
+    map.setPaintProperty('countries-outline', 'line-color', defaultOutlineColor);
+    map.setPaintProperty('countries-outline', 'line-width', 1);
+  }
+  if (map.getLayer('countries-fill')) {
+    map.setPaintProperty('countries-fill', 'fill-color', defaultFillColor);
+    map.setPaintProperty('countries-fill', 'fill-opacity', 0.5);
+  }
+}
+
 
 function resetCountryStyles(map) {
   console.log("[Highlight] Resetting country styles to default using CSS variables.");
