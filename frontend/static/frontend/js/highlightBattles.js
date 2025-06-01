@@ -107,18 +107,5 @@ function resetCountryStyles(map) {
   }
 }
 
-
-function resetCountryStyles(map) {
-  console.log("[Highlight] Resetting country styles to default using CSS variables.");
-  // Get default colors from CSS variables
-  const defaultOutlineColor = getCssVariable('--muted-color') || '#000814'; // Fallback
-  const defaultFillColor = getCssVariable('--primary-color') || '#003049'; // Fallback
-
-  map.setPaintProperty('countries-outline', 'line-color', defaultOutlineColor);
-  map.setPaintProperty('countries-outline', 'line-width', 1);
-  map.setPaintProperty('countries-fill', 'fill-color', defaultFillColor);
-  map.setPaintProperty('countries-fill', 'fill-opacity', 0.5); // Match default opacity from processBattleData
-}
-
 // Expose globally
 window.highlightCountriesWithBattles = highlightCountriesWithBattles;
