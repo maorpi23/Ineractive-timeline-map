@@ -82,6 +82,8 @@ const geoJsonPaths = {
 
 function init() {
   console.log("Initializing map...");
+  showSpinner("טוען  Loading");
+
 
 
   map = new maplibregl.Map({
@@ -107,6 +109,7 @@ function init() {
     // After initial load, highlight countries with battles
     map.once('idle', () => {
       updateBattleHighlights();
+      hideSpinner();
     });
   });
 }
