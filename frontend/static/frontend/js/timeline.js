@@ -78,10 +78,13 @@ function init() {
     zoom: 4,
     minZoom: 2.5,
     maxZoom: 5,
-    attributionControl: true
+    attributionControl: true,
+    pitchWithRotate: false,
+    
   });
   window.map = map;
-
+  map.touchZoomRotate.disableRotation();
+  map.dragRotate.disable();
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
 
   map.on('load', () => {
