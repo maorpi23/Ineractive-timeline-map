@@ -88,10 +88,24 @@ body {
   color: var(--accent-color) !important;
 }
 
-.lang-img {
-  width: var(--font-size-large);
-  height: auto;
+#lang-toggle.btn.btn-light {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px !important;
 }
+
+.lang-img {
+  border: 3px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 2px 8px var(--muted-color);
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  transition: border-color 0.3s;
+  display: block;
+}
+
 
 .popup-box {
   font-size: var(--font-size-small);
@@ -182,7 +196,7 @@ button.battle-button:hover {
 /* Language Toggle Button */
 #lang-toggle img {
   width: 30px;
-  height: auto;
+  height: 30px;
   transition: transform 0.2s;
 }
 
