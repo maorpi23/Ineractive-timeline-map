@@ -63,6 +63,8 @@ function toggleLanguage() {
   } else {
     console.warn("Map not ready yet, could not update layers");
   }
+  // אחרי החלפת שפה והכל - הראה Onboarding
+  if (window.showOnboardingTip) window.showOnboardingTip();
 }
 // Helper function to update month dropdown
 function updateMonthSelect(monthSelect) {

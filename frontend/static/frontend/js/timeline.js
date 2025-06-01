@@ -1,4 +1,76 @@
-  // spinner
+let onboardingShown = false;
+
+// תרגומים לטיפים
+const onboardingTipTexts = {
+  he: {
+    tip1: "🖱️ לחצו על מדינה במפה כדי לגלות מה קרה שם",
+    tip2: "📅 אפשר לשנות חודש ושנה בתחתית המסך"
+  },
+  en: {
+    tip1: "🖱️ Click a country on the map to see what happened there",
+    tip2: "📅 You can change the month and year at the bottom"
+  }
+};
+
+window.showOnboardingTip = function() {
+  console.log("showOnboardingTip: התחלה");
+  const tip1 = document.getElementById('onboard-tip');
+  const tip2 = document.getElementById('onboard-tip-2');
+  if (!tip1 || !tip2) {
+    console.log("showOnboardingTip: לא מוצא אלמנטים!");
+    return;
+  }
+
+  const lang = window.currentLang || 'he';
+  tip1.innerText = onboardingTipTexts[lang]?.tip1 || onboardingTipTexts.he.tip1;
+  tip2.innerText = onboardingTipTexts[lang]?.tip2 || onboardingTipTexts.he.tip2;
+
+  // אפס הכל
+  tip1.classList.remove('hide');
+  tip1.style.display = "";
+  tip2.classList.remove('hide');
+  tip2.style.display = "none";
+
+  if (window._onboardTimer1) clearTimeout(window._onboardTimer1);
+  if (window._onboardTimer2) clearTimeout(window._onboardTimer2);
+  document.getElementById('mapid').removeEventListener('click', window._hideFirstTip);
+
+  // פונקציה פנימית לסגירת טיפ ראשון
+  window._hideFirstTip = function() {
+    tip1.classList.add('hide');
+    setTimeout(() => {
+      tip1.style.display = "none";
+      showSecondTip();
+    }, 400);
+    document.getElementById('mapid').removeEventListener('click', window._hideFirstTip);
+    console.log("showOnboardingTip: הסתיים טיפ ראשון, עובר לשני");
+  };
+
+  // סגירה אוטומטית/בלחיצה
+  window._onboardTimer1 = setTimeout(window._hideFirstTip, 6000);
+  document.getElementById('mapid').addEventListener('click', window._hideFirstTip);
+
+  function showSecondTip() {
+    console.log("showSecondTip: הופעל");
+    tip2.classList.remove('hide');
+    tip2.style.display = "";
+    window._onboardTimer2 = setTimeout(() => {
+      tip2.classList.add('hide');
+      setTimeout(() => {
+        tip2.style.display = "none";
+        tip2.classList.remove('hide');
+        console.log("showSecondTip: סיום");
+      }, 400);
+    }, 5000);
+  }
+};
+
+
+
+
+
+
+// spinner
   function showSpinner(text = "") {
     const overlay = document.getElementById("spinner-overlay");
     overlay.style.display = "flex";
@@ -38,34 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 3000); // Delay to ensure the user notices the effect
     }
   });
-  // Onboarding: hide tip on first map click or after 6 seconds
-// טיפ 1: לחיצה על מדינה
-const tip1 = document.getElementById('onboard-tip');
-const tip2 = document.getElementById('onboard-tip-2');
-if (tip1 && tip2) {
-  // הסתרה אחרי 6 שניות או קליק
-  const hideFirstTip = () => {
-    tip1.classList.add('hide');
-    setTimeout(() => {
-      tip1.style.display = "none";
-      showSecondTip();
-    }, 400); // תן לאנימציה להסתיים
-  };
 
-  setTimeout(hideFirstTip, 6000);
-  document.getElementById('mapid').addEventListener('click', hideFirstTip);
-
-  // טיפ 2: חודש ושנה
-  function showSecondTip() {
-    tip2.style.display = "";
-    setTimeout(() => {
-      tip2.classList.add('hide');
-      setTimeout(() => {
-        tip2.style.display = "none";
-      }, 400);
-    }, 5000);
-  }
-}
 
 });
 
@@ -314,7 +359,6 @@ function updateBattleHighlights() {
   waitForSource(map, 'countries', () => {
     highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
 
-    // כאן מתחילים "להאזין"
     let spinnerClosed = false;
     let timeoutId = setTimeout(() => {
       if (!spinnerClosed) {
@@ -322,14 +366,30 @@ function updateBattleHighlights() {
         hideSpinner();
         map.off('render', onRender);
       }
-    }, 600); // fallback אחרי 600ms אם לא היה render
+    }, 600);
+
+    // FALLBACK – אם onRender לא ירוץ
+    let onboardingTimeout = setTimeout(() => {
+      if (!onboardingShown) {
+        onboardingShown = true;
+        console.log("updateBattleHighlights: Fallback - מציג onboarding אחרי 1.5 שניות");
+        window.showOnboardingTip();
+      }
+    }, 1500);
 
     function onRender() {
       if (!spinnerClosed) {
         spinnerClosed = true;
         hideSpinner();
         clearTimeout(timeoutId);
+        clearTimeout(onboardingTimeout);
         map.off('render', onRender);
+
+        if (!onboardingShown) {
+          onboardingShown = true;
+          console.log("updateBattleHighlights: מציג onboarding אחרי טעינה ראשונה");
+          window.showOnboardingTip();
+        }
       }
     }
 
@@ -338,9 +398,6 @@ function updateBattleHighlights() {
     });
   });
 }
-
-
-
 
 
 // expose to global so that languageSwap.js can call them:

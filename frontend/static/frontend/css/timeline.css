@@ -429,9 +429,9 @@ button.battle-button:hover {
 
 /* Onboarding – טיפ תחתון מעל הפילטרים */
 .onboard-tip-bottom {
-  position: absolute;
-  left: 50%;
-  bottom: 110%; /* טיפה מעל הפאנל */
+  position: fixed !important;
+  left: 50% !important;
+  bottom: 100px !important; /* תרגיש חופשי לשנות גובה */
   transform: translateX(-50%);
   animation: bounce-bottom 1.1s infinite alternate;
   max-width: 96vw;
@@ -439,6 +439,7 @@ button.battle-button:hover {
   z-index: 2500;
   top: auto !important;
 }
+
 
 @keyframes bounce-bottom {
   0%   { transform: translateX(-50%) translateY(0);}
