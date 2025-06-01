@@ -81,7 +81,8 @@ function init() {
     attributionControl: true
   });
   window.map = map;
-  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-left');
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
 
   map.on('load', () => {
     console.log("Map fully loaded");
