@@ -294,24 +294,27 @@ button.battle-button:hover {
   border-top: 1px solid var(--border-color); /* Add border between header and body */
   border-radius: 0 0 var(--border-radius) var(--border-radius); /* Rounded bottom corners */
 }
-
 /* container גמיש שמציג כרטיסים זה לצד זה */
 .soldiers-section {
-  display: flex;            /* flex במקום block */
-  flex-wrap: wrap;          /* יגלגל לשורה חדשה רק כשאין מקום */
-  gap: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm); /* היה 0.5rem */
 }
 
-/* הכרטיסים עצמם – יציגו בתור flex-item ולא יכבידו על שורה */
+/* הכרטיסים עצמם */
 .soldier-card {
-  display: flex;            
-  flex-direction: column;   /* תמונה מעל, שם מתחת */
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  flex: 0 0 auto;           /* לא יתכווץ ולא יתמתח מעבר ל־width/height */
+  flex: 0 0 auto;
   width: 80px;
+  font-family: var(--font-family);
+  background: var(--primary-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
-/* כפתור פנימי – תופס רק את המרחב של הכרטיס */
+/* כפתור פנימי */
 .soldier-card button {
   display: flex;
   flex-direction: column;
@@ -323,14 +326,18 @@ button.battle-button:hover {
   width: 100%;
 }
 
-/* מכולת התמונה וה־img – כפי שהיה, מוודא 80×80px */
+/* מכולת התמונה */
 .soldier-card .image-container {
   width: 80px;
   height: 80px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: calc(var(--border-radius) * 0.6); /* היה 6px */
   position: relative;
+  background: var(--secondary-color);
+  border: 1px solid var(--border-color);
 }
+
+/* התמונה עצמה */
 .soldier-card .image-container img {
   position: absolute;
   top: 0; left: 0;
@@ -342,28 +349,49 @@ button.battle-button:hover {
 
 /* שם הלוחם */
 .soldier-card .soldier-name {
-  margin-top: 0.3rem;
+  margin-top: var(--spacing-xs); /* היה 0.3rem */
   font-size: 0.75rem;
   font-weight: 500;
   text-align: center;
+  color: var(--text-color);
   white-space: nowrap;
   overflow: hidden;
-  
   text-overflow: ellipsis;
 }
+
 .soldier-card button:hover .soldier-name {
-  color: #007bff;
+  color: var(--secondary-color);
 }
 
-/* כפתור פשוט ללוחמים ללא תמונה */
+/* כפתור פשוט ללוחמים ללא תמונה - גרסה חדשה */
 .soldier-noimg {
-  display: inline-block;
-  vertical-align: top;
-  width: auto;
-  padding: 0.35rem 0.6rem;
-  font-size: 0.75rem;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 112px; /* כמו כרטיס עם תמונה (80px) + שם למטה */
+  font-size: 0.85rem;
+  font-family: var(--font-family);
+  background: var(--accent-color);
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow);
+  margin: 0; /* אין ריווח פנימי */
+  padding: 0 var(--spacing-xs);
+  text-align: center;
+  white-space: normal;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
+.soldier-noimg:hover {
+  background: var(--secondary-color);
+  color: var(--text-color);
+  transform: scale(1.04);
+}
+
+
 
 /* Onboarding – טיפ עליון */
 .onboard-tip {
