@@ -35,7 +35,7 @@ async function showBattlesPopup(country, year, month, battles) {
   const monthNames = translations[currentLang].months;
   const modalTitle = document.getElementById("battlesModalLabel");
 
-  // Set modal title based on current language
+  // Set modal title
   if (currentLang === 'he') {
     modalTitle.textContent = `קרבות ב${country} מ${monthNames[month - 1]} ${year}`;
   } else {
@@ -52,6 +52,7 @@ async function showBattlesPopup(country, year, month, battles) {
     return;
   }
 
+  // Fetch keywords for all battles
   const battlesWithKeywords = await Promise.all(
     battles.map(async battle => {
       const res = await fetch(`/api/battles/${battle.id}/keywords/`);
@@ -63,16 +64,34 @@ async function showBattlesPopup(country, year, month, battles) {
     })
   );
 
-
   // Get soldiers data for soldier matching
   const soldiersData = await getCachedSoldiersData();
+
+  // Determine which accordion item (if any) opens by default
+  const openIndex = battlesWithKeywords.length === 1 ? 0 : -1;
+
+  // Add "בחר קרב" / "Choose a battle" message if more than one battle
+if (battlesWithKeywords.length > 1) {
+  const chooseMsg = currentLang === 'he'
+    ? 'להצגת פרטי קרב, לחץ על אחד הקרבות ברשימה'
+    : 'Click a battle from the list to view details';
+
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'mb-2 fw-bold'; // בלי text-secondary
+
+  // שליפת הצבע מה־CSS Variable
+  infoDiv.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim();
+
+  infoDiv.textContent = chooseMsg;
+  battlesList.appendChild(infoDiv);
+}
+
 
   // Create the accordion container
   const accordion = document.createElement("div");
   accordion.className = "accordion";
   accordion.id = "battlesAccordion";
 
-  
   battlesWithKeywords.forEach((battle, index) => {
     // סינון הלוחמים לפי keywords מהקריאה החדשה
     const battleSoldiers = getSoldiersForBattle(battle, soldiersData);
@@ -87,7 +106,7 @@ async function showBattlesPopup(country, year, month, battles) {
     const collapseId = `collapse${index}`;
     const accordionHeader = `
       <h2 class="accordion-header" id="${headerId}">
-        <button class="accordion-button ${index === 0 ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${index === 0}" aria-controls="${collapseId}">
+        <button class="accordion-button ${index === openIndex ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${index === openIndex}" aria-controls="${collapseId}">
           ${battle.name}
         </button>
       </h2>
@@ -96,9 +115,9 @@ async function showBattlesPopup(country, year, month, battles) {
     // Format description with line breaks and add soldiers list
     const formattedDesc = battle.description.replace(/\n/g, '<br>');
     const soldiersHTML = createSoldierListHTML(formattedSoldiers, currentLang);
-    
+
     const accordionBody = `
-      <div id="${collapseId}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="${headerId}" data-bs-parent="#battlesAccordion">
+      <div id="${collapseId}" class="accordion-collapse collapse ${index === openIndex ? 'show' : ''}" aria-labelledby="${headerId}" data-bs-parent="#battlesAccordion">
         <div class="accordion-body">
           ${formattedDesc}
           ${soldiersHTML}
