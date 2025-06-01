@@ -351,16 +351,55 @@ button.battle-button:hover {
   white-space: nowrap;
 }
 
-
-.spinner {
-  width: 80px;
-  height: 80px;
-  border: 10px solid #eee;
-  border-top: 10px solid #007bff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+/* Onboarding – טיפ עליון */
+.onboard-tip {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 14px 26px;
+  border-radius: 18px;
+  font-size: 1.2em;
+  z-index: 2000;
+  box-shadow: 0 4px 18px var(--muted-color);
+  animation: bounce 1.1s infinite alternate;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  opacity: 1;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes bounce {
+  0%   { transform: translateX(-50%) translateY(0);}
+  100% { transform: translateX(-50%) translateY(-14px);}
 }
+
+.onboard-tip.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* שהפאנל יהיה יחסי */
+.filters-box {
+  position: relative;
+}
+
+/* Onboarding – טיפ תחתון מעל הפילטרים */
+.onboard-tip-bottom {
+  position: absolute;
+  left: 50%;
+  bottom: 110%; /* טיפה מעל הפאנל */
+  transform: translateX(-50%);
+  animation: bounce-bottom 1.1s infinite alternate;
+  max-width: 96vw;
+  box-sizing: border-box;
+  z-index: 2500;
+  top: auto !important;
+}
+
+@keyframes bounce-bottom {
+  0%   { transform: translateX(-50%) translateY(0);}
+  100% { transform: translateX(-50%) translateY(14px);}
+}
+

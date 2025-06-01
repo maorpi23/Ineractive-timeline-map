@@ -25,6 +25,35 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 3000); // Delay to ensure the user notices the effect
     }
   });
+  // Onboarding: hide tip on first map click or after 6 seconds
+// טיפ 1: לחיצה על מדינה
+const tip1 = document.getElementById('onboard-tip');
+const tip2 = document.getElementById('onboard-tip-2');
+if (tip1 && tip2) {
+  // הסתרה אחרי 6 שניות או קליק
+  const hideFirstTip = () => {
+    tip1.classList.add('hide');
+    setTimeout(() => {
+      tip1.style.display = "none";
+      showSecondTip();
+    }, 400); // תן לאנימציה להסתיים
+  };
+
+  setTimeout(hideFirstTip, 6000);
+  document.getElementById('mapid').addEventListener('click', hideFirstTip);
+
+  // טיפ 2: חודש ושנה
+  function showSecondTip() {
+    tip2.style.display = "";
+    setTimeout(() => {
+      tip2.classList.add('hide');
+      setTimeout(() => {
+        tip2.style.display = "none";
+      }, 400);
+    }, 5000);
+  }
+}
+
 });
 
 // Global variables
