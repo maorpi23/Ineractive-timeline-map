@@ -108,8 +108,7 @@ function init() {
     
     // After initial load, highlight countries with battles
     map.once('idle', () => {
-      updateBattleHighlights();
-      hideSpinner();
+    updateBattleHighlights();
     });
   });
 }
@@ -313,12 +312,34 @@ function updateBattleHighlights() {
   const selectedYear = selectedYearButton.innerText;
 
   waitForSource(map, 'countries', () => {
-  highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
-});
+    highlightCountriesWithBattles(map, currentLang, selectedYear, selectedMonth);
 
+    // כאן מתחילים "להאזין"
+    let spinnerClosed = false;
+    let timeoutId = setTimeout(() => {
+      if (!spinnerClosed) {
+        spinnerClosed = true;
+        hideSpinner();
+        map.off('render', onRender);
+      }
+    }, 600); // fallback אחרי 600ms אם לא היה render
 
+    function onRender() {
+      if (!spinnerClosed) {
+        spinnerClosed = true;
+        hideSpinner();
+        clearTimeout(timeoutId);
+        map.off('render', onRender);
+      }
+    }
 
+    map.once('idle', () => {
+      map.on('render', onRender);
+    });
+  });
 }
+
+
 
 
 
