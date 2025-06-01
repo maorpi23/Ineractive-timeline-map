@@ -63,9 +63,14 @@ async function showBattlesPopup(country, year, month, battles) {
       };
     })
   );
+  // === כאן מתחילה טעינת הלוחמים – נציג ספינר ===
+  showSpinner(currentLang === 'he' ? 'טוען...' : 'Loading...');
 
   // Get soldiers data for soldier matching
   const soldiersData = await getCachedSoldiersData();
+
+  hideSpinner();
+
 
   // Determine which accordion item (if any) opens by default
   const openIndex = battlesWithKeywords.length === 1 ? 0 : -1;

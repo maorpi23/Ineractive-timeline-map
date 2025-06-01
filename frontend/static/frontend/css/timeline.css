@@ -445,3 +445,26 @@ button.battle-button:hover {
   100% { transform: translateX(-50%) translateY(14px);}
 }
 
+#spinner-overlay {
+  position: fixed;
+  z-index: 5000;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.32); /* רקע כהה שקוף */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s;
+}
+#spinner-overlay .spinner-inner {
+  text-align: center;
+}
+#spinner-overlay .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+#spinner-overlay .spinner-text {
+  color: var(--text-color);
+  font-size: 1.1em;
+  margin-top: 16px;
+  font-weight: bold;
+}

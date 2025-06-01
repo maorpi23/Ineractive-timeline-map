@@ -1,3 +1,15 @@
+  // spinner
+  function showSpinner(text = "") {
+    const overlay = document.getElementById("spinner-overlay");
+    overlay.style.display = "flex";
+    overlay.style.opacity = "1";
+    overlay.querySelector('.spinner-text').innerText = text;
+  }
+  function hideSpinner() {
+    const overlay = document.getElementById("spinner-overlay");
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.style.display = "none", 400);
+  }
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM fully loaded");
   init();
@@ -5,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const monthSelect = document.getElementById("month-select");
   monthSelect.value = "9";
   handleMonthChange(monthSelect);
+
 
   // Glare Effect
   const glareButtons = document.querySelectorAll('.glare-btn');
