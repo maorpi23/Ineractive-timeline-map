@@ -68,19 +68,4 @@ Ineractive-timeline-map/
 
 4. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
-## 📸 Screenshots
-
-*(You can add screenshots of the map, timeline filter, and soldier popups here)*
-
-## 📖 Future Improvements
-
-- Add more map layers (e.g., troop movements, unit positions).  
-- Improve UI/UX design.  
-- Expand the database of battles and soldiers.  
-- Support additional languages.  
-
-## 👥 Authors
-
-- **Maor Pinhas**  
-- **Shaked [Last Name]**  
 
