@@ -2,6 +2,7 @@
 
 An interactive timeline map showcasing significant battles of World War II.  
 The project enables users to visually explore battle locations by year and month, including additional details about the battles and Jewish soldiers who participated.
+**The project made in collaboration with the "Museum of the Jewish soldier in World War II" and all data came from the museum's archive.**
 
 ## ✨ Features
 
